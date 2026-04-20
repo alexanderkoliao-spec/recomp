@@ -1,0 +1,3632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AK — Recomp HQ v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #080810;
+  --s1: #0f0f1a;
+  --s2: #161624;
+  --s3: #1e1e30;
+  --border: #2a2a42;
+  --border2: #363655;
+  --lime: #c8f542;
+  --cyan: #3ff5c8;
+  --amber: #f5a623;
+  --red: #ff4d4d;
+  --blue: #4d9fff;
+  --purple: #a855f7;
+  --text: #e8e8f4;
+  --text2: #9090b8;
+  --text3: #5a5a80;
+  --font: 'Syne', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r: 10px;
+  --r2: 6px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(8,8,16,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  height: 52px;
+}
+
+.nav-brand {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--lime);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-right: 32px;
+  white-space: nowrap;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tab {
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  color: var(--text3);
+  background: none;
+  border: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+.nav-tab:hover { color: var(--text2); background: var(--s2); }
+.nav-tab.active { color: var(--lime); background: rgba(200,245,66,0.1); }
+
+/* ─── PANELS ─── */
+.panel { display: none; padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+.panel.active { display: block; }
+
+/* ─── STAT STRIP ─── */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--lime));
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+.stat-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent-color, var(--lime));
+}
+.stat-sub {
+  font-size: 0.68rem;
+  color: var(--text3);
+  margin-top: 4px;
+  font-family: var(--mono);
+}
+
+/* ─── SECTION HEADERS ─── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  margin-top: 28px;
+}
+.sec-head h2 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text2);
+}
+.sec-head::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+
+/* ─── TABLE ─── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+th {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.tag-lime { background: rgba(200,245,66,0.12); color: var(--lime); }
+.tag-cyan { background: rgba(63,245,200,0.12); color: var(--cyan); }
+.tag-amber { background: rgba(245,166,35,0.12); color: var(--amber); }
+.tag-red { background: rgba(255,77,77,0.12); color: var(--red); }
+.tag-blue { background: rgba(77,159,255,0.12); color: var(--blue); }
+.tag-purple { background: rgba(168,85,247,0.12); color: var(--purple); }
+
+/* ─── NOTE TEXT ─── */
+.note {
+  font-size: 0.72rem;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 3px;
+}
+.alt { color: var(--cyan); font-size: 0.68rem; margin-top: 2px; }
+
+/* ─── DAY BLOCK ─── */
+.day-block {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+}
+.day-header:hover { background: var(--s3); }
+.day-title { font-size: 0.92rem; font-weight: 700; }
+.day-sub { font-size: 0.72rem; color: var(--text2); margin-top: 2px; font-family: var(--mono); }
+.day-toggle { font-size: 0.8rem; color: var(--text3); transition: transform 0.2s; }
+.day-block.open .day-toggle { transform: rotate(180deg); }
+.day-content { display: none; padding: 0; }
+.day-block.open .day-content { display: block; }
+
+.ex-section-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  padding: 10px 18px 4px;
+}
+.ex-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  align-items: flex-start;
+}
+.ex-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--lime);
+  min-width: 26px;
+  padding-top: 2px;
+}
+.ex-name { font-size: 0.88rem; font-weight: 600; }
+.ex-sets { font-family: var(--mono); font-size: 0.7rem; color: var(--cyan); margin-top: 2px; }
+
+/* ─── MEAL CARD ─── */
+.meal-row {
+  display: flex;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.meal-row:last-child { border-bottom: none; }
+.meal-time {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text3);
+  min-width: 60px;
+  padding-top: 2px;
+}
+.meal-food { font-size: 0.88rem; font-weight: 600; }
+.meal-macros {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text2);
+  margin-top: 2px;
+}
+.meal-total {
+  background: var(--s2);
+  border-radius: var(--r2);
+  padding: 10px 14px;
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+.meal-total-val { color: var(--lime); font-weight: 600; }
+
+/* ─── CHECKIN ─── */
+.checkin-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--lime);
+}
+.form-group textarea { resize: vertical; min-height: 60px; }
+
+.btn {
+  padding: 10px 22px;
+  border-radius: var(--r2);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.btn-lime { background: var(--lime); color: #080810; }
+.btn-lime:hover { background: #d4f760; transform: translateY(-1px); }
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+.btn-ghost:hover { border-color: var(--text2); color: var(--text); }
+
+/* ─── LOG TABLE ─── */
+.delta-down { color: var(--lime); font-weight: 600; }
+.delta-up { color: var(--red); font-weight: 600; }
+.delta-neu { color: var(--text3); }
+.assess-good { color: var(--lime); }
+.assess-ok { color: var(--amber); }
+.assess-bad { color: var(--red); }
+
+/* ─── CHART ─── */
+.chart-wrap {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.chart-wrap canvas { max-height: 220px; }
+
+/* ─── PROGRESS BARS ─── */
+.prog-row {
+  margin-bottom: 14px;
+}
+.prog-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+}
+.prog-label span:first-child { color: var(--text2); font-weight: 600; }
+.prog-label span:last-child { font-family: var(--mono); font-size: 0.68rem; color: var(--text3); }
+.prog-bar {
+  height: 6px;
+  background: var(--s3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--lime);
+  transition: width 0.6s ease;
+}
+
+/* ─── RULES ─── */
+.rule-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.rule-row:last-child { border-bottom: none; }
+.rule-icon { font-size: 1rem; min-width: 24px; }
+
+/* ─── SUPPLEMENT ─── */
+.supp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.supp-card {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 14px;
+}
+.supp-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 4px; }
+.supp-dose { font-family: var(--mono); font-size: 0.72rem; color: var(--cyan); }
+.supp-timing { font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
+.supp-brand { font-size: 0.7rem; color: var(--text2); margin-top: 6px; font-style: italic; }
+
+/* ─── PHOTO LOG ─── */
+.photo-entry {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.photo-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+}
+.photo-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.photo-slot {
+  background: var(--s1);
+  aspect-ratio: 3/4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.photo-slot input[type=file] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+.photo-slot img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.photo-slot-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+.photo-slot-icon { font-size: 1.4rem; color: var(--text3); }
+.photo-remove {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: rgba(8,8,16,0.8);
+  border: none;
+  color: var(--red);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.photo-metrics {
+  display: flex;
+  gap: 16px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+}
+.pm { font-family: var(--mono); font-size: 0.72rem; }
+.pm-label { color: var(--text3); margin-bottom: 2px; }
+.pm-val { font-size: 0.88rem; font-weight: 600; }
+.pm-delta { font-size: 0.68rem; }
+
+/* ─── LIGHTBOX ─── */
+.lightbox {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 90vh; border-radius: 4px; }
+.lightbox-close {
+  position: absolute; top: 20px; right: 24px;
+  background: none; border: none;
+  color: var(--text); font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .panel { padding: 20px 16px; }
+  .stat-strip { grid-template-columns: repeat(3, 1fr); }
+  .photo-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .checkin-form { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.panel.active { animation: fadeIn 0.2s ease; }
+
+/* ─── INJURY FLAG ─── */
+.injury-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+.flag-slap { background: rgba(168,85,247,0.15); color: var(--purple); border: 1px solid rgba(168,85,247,0.3); }
+.flag-knee { background: rgba(245,166,35,0.15); color: var(--amber); border: 1px solid rgba(245,166,35,0.3); }
+.flag-new { background: rgba(63,245,200,0.15); color: var(--cyan); border: 1px solid rgba(63,245,200,0.3); }
+
+/* ─── FOOD LOG ─── */
+.macro-dashboard {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.macro-big {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.macro-big::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent-color, var(--lime));
+}
+.macro-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.macro-current {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent-color, var(--lime));
+  font-family: var(--font);
+}
+.macro-target {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text2);
+  margin-top: 4px;
+}
+.macro-bar-container {
+  height: 4px;
+  background: var(--s3);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.macro-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent-color, var(--lime));
+  transition: width 0.4s ease;
+}
+.macro-small {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.macro-small::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent-color, var(--cyan));
+}
+.macro-small-val {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent-color, var(--cyan));
+  line-height: 1;
+}
+
+.quick-add-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+.quick-btn {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: var(--font);
+  color: var(--text);
+}
+.quick-btn:hover {
+  border-color: var(--lime);
+  background: var(--s2);
+  transform: translateY(-1px);
+}
+.quick-btn-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.quick-btn-macros {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--cyan);
+}
+.quick-btn-kcal {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.food-entry-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.food-entry-row:last-child { border-bottom: none; }
+.food-entry-time {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text3);
+  min-width: 50px;
+}
+.food-entry-name {
+  flex: 1;
+  font-weight: 600;
+}
+.food-entry-macros {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text2);
+  text-align: right;
+  min-width: 100px;
+}
+.food-entry-del {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.food-entry-del:hover { opacity: 1; color: var(--red); }
+
+.protein-alert {
+  background: rgba(255,77,77,0.08);
+  border: 1px solid rgba(255,77,77,0.3);
+  color: var(--red);
+  border-radius: var(--r2);
+  padding: 10px 14px;
+  font-size: 0.78rem;
+  margin-bottom: 14px;
+  display: none;
+}
+.protein-alert.active { display: block; }
+.protein-alert.warn {
+  background: rgba(245,166,35,0.08);
+  border-color: rgba(245,166,35,0.3);
+  color: var(--amber);
+}
+.protein-alert.good {
+  background: rgba(200,245,66,0.08);
+  border-color: rgba(200,245,66,0.3);
+  color: var(--lime);
+}
+
+.day-switcher {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.day-switcher input[type=date] {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 8px 12px;
+  outline: none;
+}
+.day-switcher button {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text2);
+  font-family: var(--mono);
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.78rem;
+}
+.day-switcher button:hover { border-color: var(--lime); color: var(--text); }
+
+.form-inline {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: end;
+}
+@media (max-width: 600px) {
+  .form-inline { grid-template-columns: 1fr 1fr; }
+  .macro-dashboard { grid-template-columns: 1fr; }
+}
+
+.weekly-summary-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 80px 80px;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  align-items: center;
+}
+.weekly-summary-row:last-child { border-bottom: none; }
+.ws-date { font-family: var(--mono); font-size: 0.7rem; color: var(--text3); }
+.ws-bar {
+  height: 4px;
+  background: var(--s3);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.ws-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--lime);
+}
+.ws-num { font-family: var(--mono); font-size: 0.75rem; text-align: right; }
+
+/* ─── CHECKLIST ─── */
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+.checklist-group {
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 12px;
+}
+.checklist-group-title {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 0.82rem;
+  cursor: pointer;
+  user-select: none;
+}
+.checklist-box {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border2);
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+.checklist-item.checked .checklist-box {
+  background: var(--lime);
+  border-color: var(--lime);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+.checklist-item.checked .checklist-box::after {
+  content: '✓';
+}
+.checklist-label {
+  flex: 1;
+  color: var(--text);
+}
+.checklist-item.checked .checklist-label {
+  color: var(--text3);
+  text-decoration: line-through;
+}
+.checklist-sub {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text3);
+  margin-left: auto;
+}
+
+.quick-action-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.quick-action-btn {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 14px 12px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.quick-action-btn:hover {
+  border-color: var(--lime);
+  background: var(--s2);
+  transform: translateY(-1px);
+}
+.quick-action-btn.primary {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+
+details.collapsible {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 0;
+  margin-bottom: 14px;
+}
+details.collapsible summary {
+  padding: 14px 18px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+details.collapsible summary::-webkit-details-marker { display: none; }
+details.collapsible summary::after {
+  content: '▼';
+  font-size: 0.75rem;
+  color: var(--text3);
+  transition: transform 0.2s;
+}
+details.collapsible[open] summary::after { transform: rotate(180deg); }
+details.collapsible > div {
+  padding: 0 18px 16px;
+}
+
+/* ─── MODAL ─── */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-backdrop.active { display: flex; }
+.modal {
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeIn 0.15s ease;
+}
+.modal-title {
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--lime);
+}
+.modal-field {
+  margin-bottom: 14px;
+}
+.modal-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.modal-field input {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  padding: 12px 14px;
+  outline: none;
+}
+.modal-field input:focus { border-color: var(--lime); }
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">AK · Recomp v2</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('dashboard', event)">Dashboard</button>
+    <button class="nav-tab" onclick="showPanel('foodlog', event)">Food Log</button>
+    <button class="nav-tab" onclick="showPanel('checkin', event)">Check-in</button>
+    <button class="nav-tab" onclick="showPanel('training', event)">Training</button>
+    <button class="nav-tab" onclick="showPanel('supplements', event)">Supps</button>
+    <button class="nav-tab" onclick="showPanel('nutrition', event)">Nutrition</button>
+    <button class="nav-tab" onclick="showPanel('photos', event)">Photos</button>
+    <button class="nav-tab" onclick="showPanel('rules', event)">Rules</button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     DASHBOARD
+════════════════════════════════════════ -->
+<div id="panel-dashboard" class="panel active">
+
+  <div class="stat-strip">
+    <div class="stat-card" style="--accent-color: var(--lime)">
+      <div class="stat-label">Weight</div>
+      <div class="stat-val" id="d-weight">—</div>
+      <div class="stat-sub" id="d-weight-delta">—</div>
+    </div>
+    <div class="stat-card" style="--accent-color: var(--cyan)">
+      <div class="stat-label">To Target</div>
+      <div class="stat-val" id="d-to-target">—</div>
+      <div class="stat-sub">target &lt;85 kg</div>
+    </div>
+    <div class="stat-card" style="--accent-color: var(--amber)">
+      <div class="stat-label">Waist</div>
+      <div class="stat-val" id="d-waist">—</div>
+      <div class="stat-sub" id="d-waist-delta">—</div>
+    </div>
+    <div class="stat-card" style="--accent-color: var(--blue)">
+      <div class="stat-label">Week</div>
+      <div class="stat-val" id="d-week">—</div>
+      <div class="stat-sub">of 12</div>
+    </div>
+    <div class="stat-card" style="--accent-color: var(--purple)">
+      <div class="stat-label">Avg / wk</div>
+      <div class="stat-val" id="d-rate">—</div>
+      <div class="stat-sub">kg lost</div>
+    </div>
+    <div class="stat-card" style="--accent-color: var(--red)">
+      <div class="stat-label">ETA</div>
+      <div class="stat-val" id="d-eta">—</div>
+      <div class="stat-sub">weeks remaining</div>
+    </div>
+  </div>
+
+  <!-- TODAY'S ACTIONS CHECKLIST -->
+  <div class="sec-head"><h2>Today</h2><span id="d-today-info" class="note" style="margin-left:auto"></span></div>
+  <div class="card">
+    <div class="checklist-grid" id="today-checklist">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-action-row">
+    <button class="quick-action-btn primary" onclick="showPanel('foodlog')">+ Log Food</button>
+    <button class="quick-action-btn" onclick="quickLogWeight()">+ Log Weight</button>
+    <button class="quick-action-btn" onclick="showPanel('training')">Today's Training</button>
+    <button class="quick-action-btn" onclick="generateWeeklyReview()">Weekly Review</button>
+  </div>
+
+  <!-- CHART (collapsible) -->
+  <details class="collapsible">
+    <summary>Progress Chart</summary>
+    <div>
+      <div class="chart-wrap" style="margin-bottom:0">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </div>
+  </details>
+
+  <!-- PROGRESS BARS (collapsible) -->
+  <details class="collapsible">
+    <summary>Progress to Target</summary>
+    <div>
+      <div class="prog-row">
+        <div class="prog-label">
+          <span>Weight</span>
+          <span id="prog-weight-label">—</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-weight-fill" style="width:0%"></div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label">
+          <span>Waist</span>
+          <span id="prog-waist-label">—</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-waist-fill" style="width:0%; background: var(--cyan)"></div></div>
+      </div>
+      <div class="prog-row" style="margin-bottom:0">
+        <div class="prog-label">
+          <span>Timeline</span>
+          <span id="prog-time-label">—</span>
+        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-time-fill" style="width:0%; background: var(--amber)"></div></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- TODAY'S MEAL PREVIEW (collapsible) -->
+  <details class="collapsible">
+    <summary>Today's Meal Plan</summary>
+    <div id="today-plan">
+      <!-- rendered by JS -->
+    </div>
+  </details>
+
+  <!-- WEEKLY REVIEW (collapsible, action-oriented kept visible) -->
+  <div class="sec-head"><h2>Weekly Review</h2></div>
+  <div class="card">
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px">
+      <button class="btn btn-lime" onclick="generateWeeklyReview()">Generate Report Card</button>
+      <button class="btn btn-ghost" onclick="copyForClaude()">Copy for Claude Chat</button>
+      <button class="btn btn-ghost" onclick="exportJSON()">Backup (JSON)</button>
+      <label class="btn btn-ghost" style="display:inline-block; cursor:pointer">
+        Restore JSON
+        <input type="file" accept=".json,application/json" onchange="importJSON(event)" style="display:none">
+      </label>
+    </div>
+    <div id="review-output" style="display:none; background:var(--s2); border-radius:var(--r2); padding:14px; font-family:var(--mono); font-size:0.78rem; line-height:1.6; white-space:pre-wrap; color:var(--text); overflow-x:auto"></div>
+  </div>
+
+  <!-- REFERENCE (collapsed by default) -->
+  <details class="collapsible">
+    <summary>RHR Monitoring Guide</summary>
+    <div>
+      <div class="rule-row"><div class="rule-icon">📊</div><div><strong>Alarm threshold:</strong> +7 bpm above your 7-day rolling average for 3+ consecutive days → under-recovered → deload or skip session.</div></div>
+      <div class="rule-row" style="border-bottom:none"><div class="rule-icon">⏱️</div><div><strong>How to measure:</strong> Wearable morning RHR, or first 60s after waking, fingers on radial pulse, count for 60s. Trend matters, not absolute numbers.</div></div>
+    </div>
+  </details>
+
+  <details class="collapsible">
+    <summary>Data Storage Info</summary>
+    <div>
+      <div id="storage-status" class="note" style="padding:10px; background:var(--s2); border-radius:var(--r2); margin-bottom:10px">Loading storage status...</div>
+      <div class="rule-row"><div class="rule-icon">💾</div><div><strong>Storage:</strong> Browser localStorage — persists indefinitely on this device/browser until you clear browser data.</div></div>
+      <div class="rule-row"><div class="rule-icon">📱</div><div><strong>Cross-device:</strong> No sync. Pick one device for daily logging. Use JSON export/import to bridge.</div></div>
+      <div class="rule-row" style="border-bottom:none"><div class="rule-icon">📤</div><div><strong>Weekly backup:</strong> Click "Backup (JSON)" every Sunday. Save to iCloud/Drive.</div></div>
+    </div>
+  </details>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     CHECK-IN
+════════════════════════════════════════ -->
+<div id="panel-checkin" class="panel">
+
+  <div class="sec-head"><h2>Daily Log</h2></div>
+  <div class="card">
+    <div class="checkin-form">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="ci-date">
+      </div>
+      <div class="form-group">
+        <label>Weight (kg)</label>
+        <input type="number" id="ci-weight" step="0.1" min="70" max="120" placeholder="93.4">
+      </div>
+      <div class="form-group">
+        <label>Waist (cm)</label>
+        <input type="number" id="ci-waist" step="0.5" min="70" max="115" placeholder="97.5">
+      </div>
+      <div class="form-group">
+        <label>Morning RHR (bpm)</label>
+        <input type="number" id="ci-rhr" step="1" min="35" max="100" placeholder="58">
+      </div>
+      <div class="form-group">
+        <label>Sessions this week</label>
+        <select id="ci-sessions">
+          <option value="">—</option>
+          <option>0</option><option>1</option><option>2</option>
+          <option>3</option><option>4</option><option>5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Protein (daily avg)</label>
+        <select id="ci-protein">
+          <option value="">—</option>
+          <option>200g+ ✓</option>
+          <option>160-200g ~</option>
+          <option>&lt;160g ✗</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Injury status</label>
+        <select id="ci-injury">
+          <option value="none">None</option>
+          <option value="knee">L knee effusion</option>
+          <option value="shoulder">R shoulder flare</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Post-duty day?</label>
+        <select id="ci-duty">
+          <option value="no">No</option>
+          <option value="yes">Yes (>8hr OR/on-call)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 14px">
+      <label>Notes (1 line)</label>
+      <input type="text" id="ci-notes" placeholder="Meeting meal, poor sleep, PR on RDL...">
+    </div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn btn-lime" onclick="addCheckin()">Log It</button>
+      <button class="btn btn-ghost" onclick="exportCSV()">Export CSV</button>
+    </div>
+    <div id="ci-guidance" class="note" style="margin-top:12px; padding:10px; background:var(--s2); border-radius:var(--r2); display:none"></div>
+  </div>
+
+  <div class="sec-head"><h2>Log History</h2></div>
+  <div class="card" style="padding: 0; overflow: hidden;">
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Weight</th>
+            <th>Δ</th>
+            <th>Waist</th>
+            <th>RHR</th>
+            <th>Sess.</th>
+            <th>Protein</th>
+            <th>Injury</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="log-tbody">
+          <tr><td colspan="10" style="color:var(--text3); text-align:center; padding:20px">No check-ins yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     TRAINING
+════════════════════════════════════════ -->
+<div id="panel-training" class="panel">
+
+  <div class="stat-strip" style="grid-template-columns: repeat(5,1fr)">
+    <div class="stat-card" style="--accent-color:var(--cyan)">
+      <div class="stat-label">Monday</div>
+      <div class="stat-val" style="font-size:1rem">Upper B</div>
+      <div class="stat-sub">Push + cuff</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--lime)">
+      <div class="stat-label">Tuesday</div>
+      <div class="stat-val" style="font-size:1rem">Upper A</div>
+      <div class="stat-sub">Pull</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--amber)">
+      <div class="stat-label">Thursday</div>
+      <div class="stat-val" style="font-size:1rem">Lower A</div>
+      <div class="stat-sub">Hinge / posterior</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--purple)">
+      <div class="stat-label">Saturday</div>
+      <div class="stat-val" style="font-size:1rem">Lower B</div>
+      <div class="stat-sub">Quad (PF-safe)</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--red)">
+      <div class="stat-label">Sunday</div>
+      <div class="stat-val" style="font-size:1rem">Metabolic</div>
+      <div class="stat-sub">Fat burn + carries</div>
+    </div>
+  </div>
+
+  <!-- MONDAY -->
+  <div class="day-block" data-day="1">
+    <div class="day-header" onclick="toggleDay(this)">
+      <div>
+        <div class="day-title">Monday — Upper B <span class="tag tag-cyan">Push + Cuff</span></div>
+        <div class="day-sub">40-50 min · no OHP · direct cuff work added</div>
+      </div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-content">
+      <div class="ex-section-label">Compound</div>
+      <div class="ex-row">
+        <div class="ex-num">A1</div>
+        <div>
+          <div class="ex-name">Flat DB Press (neutral grip) <span class="injury-flag flag-slap">SLAP SAFE</span></div>
+          <div class="ex-sets">4 × 8-10 · 2 min rest</div>
+          <div class="note">Neutral grip reduces SLAP stress vs barbell</div>
+          <div class="alt">Alt: machine chest press</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A2</div>
+        <div>
+          <div class="ex-name">Landmine Press (single arm) <span class="injury-flag flag-slap">OHP REPLACE</span></div>
+          <div class="ex-sets">3 × 10 each · 90s rest</div>
+          <div class="note">Replaces overhead press. Safe ROM, no impingement zone</div>
+          <div class="alt">Alt: cable low-to-high press</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Accessory</div>
+      <div class="ex-row">
+        <div class="ex-num">B1</div>
+        <div>
+          <div class="ex-name">Cable Tricep Pushdown — Rope</div>
+          <div class="ex-sets">3 × 12-15 · 60s rest</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B2</div>
+        <div>
+          <div class="ex-name">Cable Lateral Raise (single arm) <span class="injury-flag flag-slap">SHOULDER</span></div>
+          <div class="ex-sets">3 × 15 · 60s rest</div>
+          <div class="note">Keep elbow below shoulder — stay out of impingement zone</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B3</div>
+        <div>
+          <div class="ex-name">Chest-Supported Incline DB Fly</div>
+          <div class="ex-sets">3 × 12 · 60s rest</div>
+          <div class="note">Stop before stretch becomes painful</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Cuff + Core (added)</div>
+      <div class="ex-row">
+        <div class="ex-num">C1</div>
+        <div>
+          <div class="ex-name">Face Pulls — Cable Rope <span class="injury-flag flag-new">ADDED MON</span></div>
+          <div class="ex-sets">3 × 15-20 · 45s rest</div>
+          <div class="note">Cuff work now on BOTH upper days. External rotation under load protects the SLAP-adjacent structures.</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">C2</div>
+        <div>
+          <div class="ex-name">Pallof Press</div>
+          <div class="ex-sets">3 × 10 each side · 45s rest</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUESDAY -->
+  <div class="day-block" data-day="2">
+    <div class="day-header" onclick="toggleDay(this)">
+      <div>
+        <div class="day-title">Tuesday — Upper A <span class="tag tag-lime">Pull</span></div>
+        <div class="day-sub">40-50 min · shoulder 24h after Monday push</div>
+      </div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-content">
+      <div class="ex-section-label">Compound</div>
+      <div class="ex-row">
+        <div class="ex-num">A1</div>
+        <div>
+          <div class="ex-name">Cable Seated Row <span class="injury-flag flag-slap">SLAP SAFE</span></div>
+          <div class="ex-sets">4 × 8-10 · 2 min rest · neutral/pronated grip</div>
+          <div class="note">Protects biceps tendon — neutral grip only, no supination</div>
+          <div class="alt">Alt: machine row, chest-supported row</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A2</div>
+        <div>
+          <div class="ex-name">Lat Pulldown <span class="injury-flag flag-slap">SLAP SAFE</span></div>
+          <div class="ex-sets">4 × 10-12 · 90s rest · neutral or pronated grip</div>
+          <div class="note">No supinated grip. Watch R shoulder at top of movement</div>
+          <div class="alt">Alt: assisted pull-up, cable straight-arm pulldown</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Accessory</div>
+      <div class="ex-row">
+        <div class="ex-num">B1</div>
+        <div>
+          <div class="ex-name">Incline DB Curl (neutral grip)</div>
+          <div class="ex-sets">3 × 12 · 60s rest</div>
+          <div class="note">Partial ROM if tendon flares. No supination under load</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B2</div>
+        <div>
+          <div class="ex-name">Face Pulls — Cable Rope</div>
+          <div class="ex-sets">4 × 15-20 · 45s rest</div>
+          <div class="note">Rotator cuff health. Volume bumped from 3×15 to 4×15-20 given SLAP.</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B3</div>
+        <div>
+          <div class="ex-name">Cable Rear Delt Fly</div>
+          <div class="ex-sets">3 × 15 · 60s rest</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Carry + Core</div>
+      <div class="ex-row">
+        <div class="ex-num">C1</div>
+        <div>
+          <div class="ex-name">Suitcase Carry <span class="injury-flag flag-new">ADDED</span></div>
+          <div class="ex-sets">3 × 30-40m each side · 60s rest</div>
+          <div class="note">Anti-lateral flexion. Glute med demand in stance leg = valgus-corrective. SLAP-neutral (arm at side).</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">C2</div>
+        <div>
+          <div class="ex-name">Dead Bug</div>
+          <div class="ex-sets">3 × 10 each side · 45s rest</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THURSDAY -->
+  <div class="day-block" data-day="4">
+    <div class="day-header" onclick="toggleDay(this)">
+      <div>
+        <div class="day-title">Thursday — Lower A <span class="tag tag-amber">Hinge / Posterior</span></div>
+        <div class="day-sub">40-50 min · posterior-chain dominant · knee-friendly</div>
+      </div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-content">
+      <div class="ex-section-label">Compound</div>
+      <div class="ex-row">
+        <div class="ex-num">A1</div>
+        <div>
+          <div class="ex-name">Romanian Deadlift <span class="injury-flag flag-knee">KNEE-SAFE HINGE</span></div>
+          <div class="ex-sets">4 × 8-10 · 2 min rest · straps for top sets</div>
+          <div class="note">You've tolerated 3×/week — keep. Straps for high-rep sets (CNS/grip economy, not injury). Neutral spine, soft knees.</div>
+          <div class="alt">Alt: trap-bar RDL, cable pull-through</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A2</div>
+        <div>
+          <div class="ex-name">Hip Thrust (barbell or machine) <span class="injury-flag flag-new">MOVED FROM SAT</span></div>
+          <div class="ex-sets">4 × 10-12 · 90s rest</div>
+          <div class="note">Moved to Thursday — pairs with RDL (posterior chain day). Zero knee joint stress.</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Accessory</div>
+      <div class="ex-row">
+        <div class="ex-num">B1</div>
+        <div>
+          <div class="ex-name">Seated Leg Curl</div>
+          <div class="ex-sets">3 × 12-15 · 60s rest</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B2</div>
+        <div>
+          <div class="ex-name">Hip Abduction Machine <span class="injury-flag flag-knee">VALGUS FIX</span></div>
+          <div class="ex-sets">3 × 15-20 · 60s rest</div>
+          <div class="note">Glute med strengthening — directly addresses valgus. Critical, do not skip</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B3</div>
+        <div>
+          <div class="ex-name">Farmer's Walk <span class="injury-flag flag-new">ADDED</span></div>
+          <div class="ex-sets">3 × 40-50m · 90s rest · heavy load</div>
+          <div class="note">Bilateral loaded carry. Grip, trunk stability, metabolic cost. Best "bang for buck" accessory in your profile.</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Floor</div>
+      <div class="ex-row">
+        <div class="ex-num">C1</div>
+        <div>
+          <div class="ex-name">Single-Leg Glute Bridge</div>
+          <div class="ex-sets">3 × 12 each · 45s rest</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SATURDAY -->
+  <div class="day-block" data-day="6">
+    <div class="day-header" onclick="toggleDay(this)">
+      <div>
+        <div class="day-title">Saturday — Lower B <span class="tag tag-purple">Quad (PF-Safe)</span></div>
+        <div class="day-sub">40-50 min · Spanish squat primary · leg ext removed</div>
+      </div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-content">
+      <div class="ex-section-label">Compound</div>
+      <div class="ex-row">
+        <div class="ex-num">A1</div>
+        <div>
+          <div class="ex-name">Reverse Lunge (DB, goblet, or Smith) <span class="injury-flag flag-new">REPLACES BSS</span></div>
+          <div class="ex-sets">4 × 8-10 each · 2 min rest</div>
+          <div class="note">Reverse lunge &gt; BSS for valgus-prone knees. Step backward reduces anterior shear on the front knee and the stance leg loads the glutes more than quads. Keep torso upright, front tibia vertical.</div>
+          <div class="alt">Alt: low box step-up, split squat (static, front foot elevated)</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A2</div>
+        <div>
+          <div class="ex-name">Leg Press (feet high + wide) <span class="injury-flag flag-knee">ROM LIMIT</span></div>
+          <div class="ex-sets">4 × 10-12 · 90s rest</div>
+          <div class="note">Stop 20° before full flexion. Feet high offloads patellofemoral joint.</div>
+          <div class="alt">Alt: hack squat same ROM</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Accessory</div>
+      <div class="ex-row">
+        <div class="ex-num">B1</div>
+        <div>
+          <div class="ex-name">Spanish Squat (band-resisted) <span class="injury-flag flag-new">REPLACES LEG EXT</span></div>
+          <div class="ex-sets">3 × 12-15 · 60s rest</div>
+          <div class="note">Band counter-force at the knees lowers PFJ reaction force per unit of quad activation. Best quad-biased movement for PF OA (Giles et al., BJSM 2017). VMO-biased.</div>
+          <div class="alt">Alt: sissy squat (controlled), reverse Nordic</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B2</div>
+        <div>
+          <div class="ex-name">Lying Leg Curl</div>
+          <div class="ex-sets">3 × 12-15 · 60s rest</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B3</div>
+        <div>
+          <div class="ex-name">Standing Calf Raise</div>
+          <div class="ex-sets">4 × 15-20 · 45s rest</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Floor + Valgus Work</div>
+      <div class="ex-row">
+        <div class="ex-num">C1</div>
+        <div>
+          <div class="ex-name">Copenhagen Plank <span class="injury-flag flag-knee">VALGUS FIX</span></div>
+          <div class="ex-sets">3 × 20-30s each · 45s rest</div>
+          <div class="note">Adductor strengthening — directly addresses valgus alignment</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">C2</div>
+        <div>
+          <div class="ex-name">Terminal Knee Extension (band) <span class="injury-flag flag-new">ADDED</span></div>
+          <div class="ex-sets">3 × 15-20 · 30s rest</div>
+          <div class="note">VMO-biased. Band anchored behind you, extend from ~20° flexion to full. Counters quad inhibition from mild OA.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUNDAY -->
+  <div class="day-block" data-day="0">
+    <div class="day-header" onclick="toggleDay(this)">
+      <div>
+        <div class="day-title">Sunday — Metabolic Circuit <span class="tag tag-red">Fat Burn</span></div>
+        <div class="day-sub">40 min · short rest · high rep · doesn't duplicate Sat posterior work</div>
+      </div>
+      <div class="day-toggle">▼</div>
+    </div>
+    <div class="day-content">
+      <div class="ex-section-label">Circuit A — Upper (3 rounds, 30s rest between exercises, 90s between rounds)</div>
+      <div class="ex-row">
+        <div class="ex-num">A1</div>
+        <div>
+          <div class="ex-name">Machine Chest Press</div>
+          <div class="ex-sets">15 reps · moderate load</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A2</div>
+        <div>
+          <div class="ex-name">Cable Seated Row (neutral grip)</div>
+          <div class="ex-sets">15 reps</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">A3</div>
+        <div>
+          <div class="ex-name">Cable Lateral Raise</div>
+          <div class="ex-sets">15 reps each arm</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Circuit B — Lower / Carry (3 rounds, same rest)</div>
+      <div class="ex-row">
+        <div class="ex-num">B1</div>
+        <div>
+          <div class="ex-name">Goblet Reverse Lunge <span class="injury-flag flag-knee">KNEE-FRIENDLY</span></div>
+          <div class="ex-sets">10 each leg · light load</div>
+          <div class="note">Replaces hip thrust here (hip thrust moved to Thu to avoid posterior-chain duplication)</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B2</div>
+        <div>
+          <div class="ex-name">Farmer's Walk</div>
+          <div class="ex-sets">40-50m · moderate load</div>
+        </div>
+      </div>
+      <div class="ex-row">
+        <div class="ex-num">B3</div>
+        <div>
+          <div class="ex-name">Hip Abduction Machine</div>
+          <div class="ex-sets">20 reps · light load</div>
+        </div>
+      </div>
+      <div class="ex-section-label">Finisher — 10 min</div>
+      <div class="ex-row">
+        <div class="ex-num">F1</div>
+        <div>
+          <div class="ex-name">Stationary Bike — High Effort Intervals</div>
+          <div class="ex-sets">30s hard / 30s easy × 10 rounds</div>
+          <div class="note">Only session with a finisher. Metabolic, not strength</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POST-DUTY DAY CONTINGENCY -->
+  <div class="sec-head"><h2>Post-Duty Day Contingency</h2></div>
+  <div class="card">
+    <div class="card-title">If prior day was &gt;8hr OR / on-call / late night surgery</div>
+    <div class="rule-row"><div class="rule-icon">🔄</div><div><strong>Downgrade that session</strong> to 60-70% volume: same exercises, drop top sets, reduce load 10-15%, skip the finisher. RPE ceiling 7.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔄</div><div><strong>If heavy lower day (Thu/Sat) falls post-duty:</strong> swap to upper accessory + mobility (15 min face pulls/band work + 20 min walk + stretch). Reschedule lower to Friday or Sunday if possible.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔄</div><div><strong>RHR &gt;+7 bpm over 7d avg for 3 days:</strong> same downgrade. Two consecutive downgrades = full rest day.</div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">⚕️</div><div><strong>Nutrition unchanged</strong> — don't compensate down. Protein floor still 200g. Post-duty days are when LBM loss risk spikes.</div></div>
+  </div>
+
+  <!-- CARDIO + PROGRESSION -->
+  <div class="sec-head"><h2>Cardio & Progression</h2></div>
+  <div class="card">
+    <div class="rule-row">
+      <div class="rule-icon">🚴</div>
+      <div><strong>Post-session cardio:</strong> 20-30 min incline walk or stationary bike. No running, no plyometrics.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">📈</div>
+      <div><strong>Progression:</strong> Add 1 rep/set before adding weight. Hit top of rep range all sets → add ~2.5kg.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">🎯</div>
+      <div><strong>RPE:</strong> Compounds = 7-8. Accessories = 8-9. Never to failure on compound lifts.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">🦵</div>
+      <div><strong>L knee effusion present:</strong> Skip all knee-dominant work. Upper + hip hinge only that day.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">💪</div>
+      <div><strong>R shoulder flare:</strong> Cable-only upper, reduce ROM, swap DB press for machine chest press.</div>
+    </div>
+    <div class="rule-row" style="border-bottom:none">
+      <div class="rule-icon">⏸️</div>
+      <div><strong>Deload at week 6:</strong> 5 days, 60% volume, same frequency. Prevents CNS burnout on 900 kcal deficit.</div>
+    </div>
+  </div>
+
+  <!-- MOBILITY -->
+  <div class="sec-head"><h2>Warm-Up Protocol (Every Session — 8 min)</h2></div>
+  <div class="card">
+    <div class="card-title">Upper Day Warm-Up (Mon/Tue)</div>
+    <div class="rule-row"><div class="rule-icon">1</div><div><strong>Bike or elliptical — 3 min easy.</strong> Elevate HR, lubricate joints.</div></div>
+    <div class="rule-row"><div class="rule-icon">2</div><div><strong>Band external rotations — 2×15.</strong> <span class="note">Infraspinatus/teres minor activation before any load on R shoulder.</span></div></div>
+    <div class="rule-row"><div class="rule-icon">3</div><div><strong>Scapular wall slides — 2×10.</strong> <span class="note">Serratus anterior + lower trap. Corrects scapular dyskinesis that loads the SLAP.</span></div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">4</div><div><strong>Cross-body shoulder stretch — 30s each side.</strong> <span class="note">Posterior capsule stretch. Tight posterior capsule → anterior humeral head migration → SLAP stress.</span></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Lower Day Warm-Up (Thu/Sat)</div>
+    <div class="rule-row"><div class="rule-icon">1</div><div><strong>Bike or elliptical — 3 min easy.</strong></div></div>
+    <div class="rule-row"><div class="rule-icon">2</div><div><strong>Glute bridges — 2×15.</strong> <span class="note">Glute activation before hinge. Prevents knee valgus collapse under load.</span></div></div>
+    <div class="rule-row"><div class="rule-icon">3</div><div><strong>Clamshells with band — 2×15 each.</strong> <span class="note">Glute med pre-activation. Critical given bilateral valgus — underactive glute med is a primary driver.</span></div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">4</div><div><strong>Hip 90/90 stretch — 60s each side.</strong> <span class="note">Hip internal + external rotation. Restricted hip mobility compensates at the knee in valgus pattern.</span></div></div>
+  </div>
+
+  <div class="sec-head"><h2>Cool-Down / Mobility (Post-Session — 5-8 min)</h2></div>
+  <div class="card">
+    <div class="card-title">Daily — Do Every Session</div>
+    <div class="rule-row"><div class="rule-icon">●</div><div><strong>Supine knee-to-chest — 60s each side.</strong> <span class="note">Lumbar decompression + hip flexor relief after seated work.</span></div></div>
+    <div class="rule-row"><div class="rule-icon">●</div><div><strong>Pigeon pose (or figure-4 supine) — 60s each side.</strong> <span class="note">Hip external rotator stretch. Direct carryover to valgus correction.</span></div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">●</div><div><strong>Child's pose — 60s.</strong> <span class="note">Thoracic extension + lat stretch. Counters the forward shoulder position from desk/OR work.</span></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">After Upper Days — Add These</div>
+    <div class="rule-row"><div class="rule-icon">●</div><div><strong>Doorframe or cable chest stretch — 30s each arm.</strong> <span class="note">Pec minor release. Tight pec minor → anterior tilt of scapula → impingement risk.</span></div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">●</div><div><strong>Sleeper stretch — 30s R side only.</strong> <span class="note">Posterior capsule stretch specific to SLAP management. Gentle — no pain.</span></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">After Lower Days — Add These</div>
+    <div class="rule-row"><div class="rule-icon">●</div><div><strong>Standing quad stretch — 30s each.</strong> <span class="note">Rectus femoris release. Tight quad pulls patella superiorly — increases patellofemoral load.</span></div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">●</div><div><strong>Seated hamstring stretch — 30s each.</strong> <span class="note">Post-RDL/leg curl. Tight hamstrings increase posterior tibial pull → relevant for valgus mechanics.</span></div></div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     NUTRITION
+════════════════════════════════════════ -->
+<div id="panel-nutrition" class="panel">
+
+  <div class="card" style="border-color: var(--lime); margin-bottom: 20px">
+    <div style="font-size:0.85rem; line-height:1.5">
+      Active logging happens in <strong style="color:var(--lime)">Food Log</strong> tab. This tab is reference only — read once, check back when you need the templates or macro math.
+    </div>
+  </div>
+
+  <div class="stat-strip" style="grid-template-columns: repeat(3,1fr)">
+    <div class="stat-card" style="--accent-color:var(--lime)">
+      <div class="stat-label">Training Day</div>
+      <div class="stat-val" style="font-size:1.1rem">1800</div>
+      <div class="stat-sub">kcal · Mon/Tue/Thu/Sat/Sun</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--amber)">
+      <div class="stat-label">Rest Day</div>
+      <div class="stat-val" style="font-size:1.1rem">1600</div>
+      <div class="stat-sub">kcal · Wed/Fri (incl. surgery)</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--cyan)">
+      <div class="stat-label">Protein Floor</div>
+      <div class="stat-val" style="font-size:1.1rem">200g+</div>
+      <div class="stat-sub">non-negotiable daily</div>
+    </div>
+  </div>
+
+  <details class="collapsible">
+    <summary>Deficit Math & Abort Criteria</summary>
+    <div>
+      <div style="font-size:0.85rem; line-height:1.6">
+        Weekly intake: (1800 × 5) + (1600 × 2) = <strong>12,200 kcal</strong> → daily avg <strong>~1743 kcal</strong><br>
+        Estimated maintenance at 94kg + 4-5 training sessions: ~2700 kcal<br>
+        <strong>Net deficit: ~957 kcal/day → ~1.0 kg/week fat loss</strong><br>
+        <strong>ETA to &lt;85kg: week 9-10</strong> (plan extends to 12 for buffer + stall insurance)<br>
+        <span class="note" style="color:var(--red)">Abort criteria: if weight loss stalls 2+ weeks OR training performance crashes &gt;15% → reverse diet 1 week at +300 kcal, then resume.</span>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible">
+    <summary>Anchor Foods — Macro Reference</summary>
+    <div style="padding:0 !important">
+      <div style="overflow-x:auto; padding: 0 16px 16px">
+        <table>
+        <thead>
+          <tr><th>Food</th><th>Unit</th><th>Protein</th><th>Carbs</th><th>Fat</th><th>kcal</th><th>Best Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>ON HydroWhey</td><td>1 scoop</td><td class="delta-down">30g</td><td>2g</td><td>1g</td><td>140</td><td><span class="tag tag-blue">Plug-in</span></td></tr>
+          <tr><td>Anchor Chicken</td><td>Full serving</td><td class="delta-down">96g</td><td>—</td><td>10g</td><td>465</td><td><span class="tag tag-lime">Main meal</span></td></tr>
+          <tr><td>Anchor Chicken</td><td>Half serving</td><td class="delta-down">48g</td><td>—</td><td>5g</td><td>235</td><td><span class="tag tag-lime">Cut meal</span></td></tr>
+          <tr><td>Chicken Chips</td><td>30g</td><td class="delta-down">28g</td><td>—</td><td>3g</td><td>138</td><td><span class="tag tag-amber">Snack</span></td></tr>
+          <tr><td>Chicken Chips</td><td>50g</td><td class="delta-down">46g</td><td>—</td><td>5g</td><td>230</td><td><span class="tag tag-amber">Meal sub</span></td></tr>
+          <tr><td>Rice batch ÷8</td><td>1 container</td><td>5g</td><td class="delta-down">50g</td><td>&lt;1g</td><td>225</td><td><span class="tag tag-cyan">Carb</span></td></tr>
+          <tr><td>Kirkland 0% Greek Yogurt</td><td>300g</td><td class="delta-down">28.2g</td><td>15.9g (8.7 sugar)</td><td>0g</td><td>177</td><td><span class="tag tag-purple">Late meal</span></td></tr>
+          <tr><td>7-11 Chicken Breast</td><td>1 pack</td><td class="delta-down">30.2g</td><td>—</td><td>—</td><td>~150</td><td><span class="tag tag-red">Emergency</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note" style="padding:0 0 10px">Kirkland 0% Greek: 59 kcal / 9.4g protein / 5.3g carbs (2.9g sugar) / 0g fat per 100g. Multiply by portion.</div>
+    </div>
+  </details>
+
+  <details class="collapsible">
+    <summary>Training Day Template — ~1800 kcal</summary>
+    <div>
+    <div class="meal-row">
+      <div class="meal-time">12:00</div>
+      <div>
+        <div class="meal-food">½ Anchor Chicken + Rice ÷8</div>
+        <div class="meal-macros">53g protein · 50g carbs · 460 kcal · only rice serving of the day</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">15:00</div>
+      <div>
+        <div class="meal-food">30g Chicken Chips + 300g Greek Yogurt</div>
+        <div class="meal-macros">56.2g protein · 15.9g carbs · 315 kcal</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">19:00</div>
+      <div>
+        <div class="meal-food">Full Anchor Chicken + vegetables</div>
+        <div class="meal-macros">96g protein · 10g fat · ~520 kcal · no second rice</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">20:30</div>
+      <div>
+        <div class="meal-food">2 Whey scoops</div>
+        <div class="meal-macros">60g protein · 280 kcal · close eating window</div>
+      </div>
+    </div>
+    <div class="meal-total">
+      <span>Total base</span>
+      <span class="meal-total-val">~265g protein · ~1575 kcal</span>
+    </div>
+    <div class="note" style="margin-top:10px">~225 kcal buffer for vegetables, seasonings, cooking oils (1 tbsp olive oil = 120 kcal). Max 1 rice serving/day.</div>
+    </div>
+  </details>
+
+  <details class="collapsible">
+    <summary>Rest Day Template — ~1600 kcal (Wed/Fri)</summary>
+    <div>
+    <div class="meal-row">
+      <div class="meal-time">12:00</div>
+      <div>
+        <div class="meal-food">½ Anchor Chicken + vegetables (no rice)</div>
+        <div class="meal-macros">53g protein · ~290 kcal</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">15:00</div>
+      <div>
+        <div class="meal-food">30g Chicken Chips + 200g Greek Yogurt</div>
+        <div class="meal-macros">46.8g protein · 256 kcal</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">19:00</div>
+      <div>
+        <div class="meal-food">Full Anchor Chicken + vegetables</div>
+        <div class="meal-macros">96g protein · ~520 kcal</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">20:30</div>
+      <div>
+        <div class="meal-food">2 Whey scoops</div>
+        <div class="meal-macros">60g protein · 280 kcal</div>
+      </div>
+    </div>
+    <div class="meal-total">
+      <span>Total base</span>
+      <span class="meal-total-val">~256g protein · ~1346 kcal</span>
+    </div>
+    <div class="note" style="margin-top:10px">~250 kcal buffer. No carb meal — spares the weekly carb budget for training days when it matters.</div>
+    </div>
+  </details>
+
+  <details class="collapsible">
+    <summary>Meeting Meal Protocol</summary>
+    <div>
+    <div class="rule-row">
+      <div class="rule-icon">🍽️</div>
+      <div>
+        <strong>Restaurant (full control):</strong> Biggest protein item, plainest prep. Skip or push starch aside. One drink max — spirits &gt; beer &gt; wine.
+      </div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">🥩</div>
+      <div>
+        <strong>Hosted dinner:</strong> Eat protein + vegetables. Small portions of everything else — be polite, don't announce. Always arrive having had at least 1 whey first.
+      </div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-icon">📦</div>
+      <div>
+        <strong>Catered (no control):</strong> Treat as maintenance day (~2600 kcal). Hit protein as best you can. One meal doesn't move the needle.
+      </div>
+    </div>
+    <div class="rule-row" style="border-bottom:none">
+      <div class="rule-icon">📉</div>
+      <div>
+        <strong>Frequency accounting:</strong> 1 meeting meal/wk = no compensation needed. 2+/wk = drop one rest day to 1400 kcal to absorb the surplus. 3+/wk = the plan isn't the problem, your schedule is.
+      </div>
+    </div>
+    </div>
+  </details>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     FOOD LOG
+════════════════════════════════════════ -->
+<div id="panel-foodlog" class="panel">
+
+  <!-- Day switcher -->
+  <div class="day-switcher">
+    <button onclick="foodLogDayShift(-1)">◀ Prev</button>
+    <input type="date" id="fl-date" onchange="renderFoodLog()">
+    <button onclick="foodLogDayShift(1)">Next ▶</button>
+    <button onclick="foodLogToday()" style="color: var(--lime); border-color: var(--lime)">Today</button>
+    <span id="fl-day-type" class="note" style="margin-left:auto"></span>
+  </div>
+
+  <!-- Alert banner -->
+  <div id="fl-alert" class="protein-alert">⚠ Protein projection low. Add whey or a lean protein source before your eating window closes.</div>
+
+  <!-- Macro dashboard -->
+  <div class="macro-dashboard">
+    <div class="macro-big" style="--accent-color: var(--lime)">
+      <div class="macro-label">Protein</div>
+      <div class="macro-current"><span id="fl-protein">0</span><span style="font-size:1rem; color:var(--text3); font-family:var(--mono)">g</span></div>
+      <div class="macro-target">target: <span id="fl-protein-target">200</span>g (floor)</div>
+      <div class="macro-bar-container"><div class="macro-bar-fill" id="fl-protein-bar" style="width:0%"></div></div>
+    </div>
+    <div class="macro-small" style="--accent-color: var(--amber)">
+      <div class="macro-label">Calories</div>
+      <div class="macro-small-val"><span id="fl-kcal">0</span></div>
+      <div class="macro-target" style="font-size:0.68rem">/ <span id="fl-kcal-target">1800</span></div>
+      <div class="macro-bar-container"><div class="macro-bar-fill" id="fl-kcal-bar" style="width:0%; background:var(--amber)"></div></div>
+    </div>
+    <div class="macro-small" style="--accent-color: var(--cyan)">
+      <div class="macro-label">Carbs</div>
+      <div class="macro-small-val"><span id="fl-carbs">0</span><span style="font-size:0.75rem; color:var(--text3); font-family:var(--mono)">g</span></div>
+      <div class="macro-target" style="font-size:0.68rem">fat: <span id="fl-fat">0</span>g</div>
+    </div>
+  </div>
+
+  <!-- Quick Add Anchor Foods -->
+  <div class="sec-head"><h2>Quick Add — Anchor Foods</h2></div>
+  <div class="card">
+    <div class="quick-add-grid" id="quick-anchor-grid">
+      <!-- rendered by JS -->
+    </div>
+    <div class="note" style="margin-top:14px">One tap logs the item at current time. Long-press or right-click is not used — just click to log.</div>
+  </div>
+
+  <!-- Quick Add Custom Food -->
+  <div class="sec-head"><h2>Custom / One-Off Food</h2></div>
+  <div class="card">
+    <div class="form-inline">
+      <div class="form-group" style="margin:0">
+        <label>Food name</label>
+        <input type="text" id="fl-custom-name" placeholder="e.g. sashimi platter">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>Protein (g)</label>
+        <input type="number" id="fl-custom-protein" step="1" min="0" placeholder="40">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>Carbs (g)</label>
+        <input type="number" id="fl-custom-carbs" step="1" min="0" placeholder="0">
+      </div>
+      <div class="form-group" style="margin:0">
+        <label>Fat (g)</label>
+        <input type="number" id="fl-custom-fat" step="1" min="0" placeholder="5">
+      </div>
+      <div class="form-group" style="margin:0">
+        <button class="btn btn-lime" onclick="addCustomFood()">Add</button>
+      </div>
+    </div>
+    <div class="note" style="margin-top:10px">Calories auto-calculated: <span style="color:var(--cyan)">(protein × 4) + (carbs × 4) + (fat × 9)</span>. Rough estimates are fine — track the habit, not the precision.</div>
+
+    <!-- Common restaurant/meeting meal shortcuts -->
+    <div style="margin-top:16px; padding-top:16px; border-top: 1px solid var(--border)">
+      <div class="card-title" style="margin-bottom:10px">Quick Shortcuts (Rough Estimates)</div>
+      <div class="quick-add-grid" id="quick-shortcut-grid">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Log -->
+  <div class="sec-head"><h2>Today's Entries</h2></div>
+  <div class="card" id="fl-entries-card">
+    <div id="fl-entries"></div>
+    <div id="fl-empty" style="text-align:center; color:var(--text3); padding:20px; font-size:0.85rem">No entries yet today. Tap an anchor food above or add a custom item.</div>
+  </div>
+
+  <!-- Weekly Summary -->
+  <div class="sec-head"><h2>7-Day Protein Compliance</h2></div>
+  <div class="card" id="fl-weekly">
+    <!-- rendered by JS -->
+  </div>
+
+  <!-- Export -->
+  <div class="card">
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn btn-ghost" onclick="exportFoodLogCSV()">Export Food Log CSV</button>
+      <button class="btn btn-ghost" onclick="copyFoodDayForClaude()">Copy Today for Claude</button>
+      <button class="btn btn-ghost" onclick="testStorage()">Test Storage</button>
+    </div>
+    <div id="fl-storage-test" class="note" style="margin-top:10px; display:none; padding:10px; background:var(--s2); border-radius:var(--r2)"></div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     SUPPLEMENTS
+════════════════════════════════════════ -->
+<div id="panel-supplements" class="panel">
+
+  <div class="sec-head"><h2>Daily Stack Reminder</h2></div>
+  <div class="card">
+    <div class="card-title">When & what to take (detail in Dashboard checklist)</div>
+    <div class="meal-row">
+      <div class="meal-time">MORNING<br>w/ breakfast</div>
+      <div>
+        <div class="meal-food">LE Two-Per-Day × 2 · Nordic Naturals D3 (dose per labs) · LE Super K × 1 · Ultimate Omega 2X × 2</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">60 MIN<br>PRE-TRAIN</div>
+      <div>
+        <div class="meal-food">CollagenUP × 3 scoops (15g) in water</div>
+        <div class="meal-macros">Training days only (Mon/Tue/Thu/Sat/Sun)</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">LUNCH<br>(12:00)</div>
+      <div>
+        <div class="meal-food">Thorne Curcumin Phytosome SR × 2 caps</div>
+      </div>
+    </div>
+    <div class="meal-row">
+      <div class="meal-time">DINNER<br>(19:00)</div>
+      <div>
+        <div class="meal-food">Ultimate Omega 2X × 1 · Curcumin × 2 caps · Magnesium × 4 tabs · Creatine 5g</div>
+      </div>
+    </div>
+    <div class="meal-row" style="border-bottom:none">
+      <div class="meal-time">AS RX</div>
+      <div>
+        <div class="meal-food">Febuxostat · Colchicine · Mounjaro (weekly)</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible">
+    <summary>Reorder Reference — iHerb Shopping List</summary>
+    <div>
+      <div class="note" style="margin-bottom:10px">Taiwan delivery via iHerb from Korea warehouse, 5-11 days, 7-Eleven pickup. Free shipping at NT$1,250+. Batch orders to stay under the 6-shipment-per-half-year duty-free quota.</div>
+
+  <div class="sec-head"><h2>Current Stack — Action Required</h2></div>
+  <div class="supp-grid">
+
+    <div class="supp-card" style="border-color: var(--amber)">
+      <div class="supp-name">Nature Made D3 1000 IU <span class="tag tag-amber" style="margin-left:4px">UNDERDOSED</span></div>
+      <div class="supp-dose">Current: 1000 IU → Target: based on serum 25-OH-D</div>
+      <div class="supp-timing">Indoor surgeon = low UVB. Get serum 25-OH-D ordered THIS WEEK.</div>
+      <div class="supp-brand">
+        <strong>Action by result:</strong><br>
+        &lt;30 ng/mL → 5000 IU × 8 wk, recheck<br>
+        30-40 → 2000-3000 IU daily<br>
+        40-60 → maintain with current 1000 IU<br>
+        <strong>iHerb pick:</strong> <strong>Nordic Naturals Vitamin D3 5000 IU</strong> (same brand you trust) or simply take 2× your current Nature Made D3 1000 IU daily. <strong>Pair with K2-MK7</strong> (see Additions below) — any time D3 is elevated above 2000 IU, K2 co-supplementation is the standard of care to prevent calcium misdirection.
+      </div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--lime)">
+      <div class="supp-name">Life Extension Two-Per-Day <span class="tag tag-lime" style="margin-left:4px">KEEP</span></div>
+      <div class="supp-dose">2 caps/day with breakfast</div>
+      <div class="supp-timing">Active B-vitamin forms (methylfolate, methylcobalamin), meaningful mineral doses. Still the best-formulated general multi on the market. Refill via iHerb.</div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--amber)">
+      <div class="supp-name">Nordic Naturals Ultimate Omega <span class="tag tag-amber" style="margin-left:4px">UPGRADE DOSE</span></div>
+      <div class="supp-dose">Standard = 1280mg EPA+DHA per 2 softgels. Target for OA/tendinopathy = 3-4g/day.</div>
+      <div class="supp-timing">With fat-containing meal. Split across 2 meals if GI tolerance is an issue on Mounjaro.</div>
+      <div class="supp-brand">
+        <strong>Switch to: Nordic Naturals Ultimate Omega 2X, 120 softgels</strong> — 2,150mg per 2 softgels (rTG form). 3 softgels/day hits 3.2g EPA+DHA target. Lasts ~40 days per bottle. <br>
+        Buy 2 bottles per 3-month consolidated iHerb order.
+      </div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--lime)">
+      <div class="supp-name">Fitness Labs German Creatine <span class="tag tag-lime" style="margin-left:4px">KEEP</span></div>
+      <div class="supp-dose">5g daily, anytime</div>
+      <div class="supp-timing">No loading needed. German sourcing = likely Creapure. Keep your current supply.</div>
+    </div>
+
+    <div class="supp-card">
+      <div class="supp-name">Febuxostat + Colchicine</div>
+      <div class="supp-dose">As prescribed</div>
+      <div class="supp-timing">Clinical — not in scope. <strong>Relevant note:</strong> aggressive deficits + high protein increase purine load transiently. Hydrate 3-4L/day. Monitor urate if you get symptoms.</div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--purple)">
+      <div class="supp-name">Mounjaro (tirzepatide) weekly</div>
+      <div class="supp-dose">As prescribed</div>
+      <div class="supp-timing">See Mounjaro panel at top. Protein compliance = #1 risk. Split omega-3 dose across 2 meals to avoid GI issues with delayed gastric emptying.</div>
+    </div>
+
+  </div>
+
+  <div class="sec-head"><h2>Additions — All on iHerb Taiwan</h2></div>
+  <div class="supp-grid">
+
+    <div class="supp-card" style="border-color: var(--cyan)">
+      <div class="supp-name">Vitamin K2 (MK-7) <span class="tag tag-cyan" style="margin-left:4px">ADD</span></div>
+      <div class="supp-dose">180 mcg MK-7 daily (Knapen 3-year RCT dose)</div>
+      <div class="supp-timing">Morning with D3 + fat-containing meal. MK-7 half-life is ~72 hours — once daily is enough.</div>
+      <div class="supp-brand">
+        <strong>iHerb pick: Life Extension Super K</strong> — MK-7 180 mcg + MK-4 1000 mcg + K1 1500 mcg in one softgel. 90 softgels = 3 months.<br><br>
+        <strong style="color:var(--red)">⚠ Critical: do NOT buy Thorne Vitamin D + K2 Liquid.</strong> Despite the elegant all-in-one format, Thorne's K2 is <strong>MK-4 (menatetrenone)</strong>, not MK-7. MK-4 at 200 mcg is pharmacologically inert:<br>
+        • Sato et al. 2012 (Nutrition J.): at 420 mcg oral MK-4, serum K2 was <strong>undetectable at every time point in every subject</strong><br>
+        • MK-4 half-life = 1-4 hours; the Japanese osteoporosis doses that worked were 45mg (= 45,000 mcg) 3×/day — pharmacological, not nutritional<br>
+        • MK-7 half-life = 72 hours, and the Knapen RCT showed 180 mcg MK-7 daily significantly improved BMD and arterial calcification biomarkers over 3 years<br><br>
+        The Thorne liquid essentially delivers D3 alone with an inert companion. Split D3 and K2 into two products instead — the Life Extension Super K above is the MK-7 answer.<br><br>
+        <strong>Alternative single-product combo:</strong> <strong>Sports Research Vitamin D3 + K2 (5000 IU + 100 mcg MK-7)</strong> — on iHerb, real MK-7 form. Only downside: fixed D3 dose means you can't titrate by serum 25-OH-D without double-dosing.
+      </div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--cyan)">
+      <div class="supp-name">Collagen Peptides + Vit C <span class="tag tag-cyan" style="margin-left:4px">ADD</span></div>
+      <div class="supp-dose">15g hydrolyzed collagen + 50mg Vit C, 60 min pre-training (training days only)</div>
+      <div class="supp-timing">Shaw 2017 AJSM protocol. 60-min timing aligns with circulating glycine/proline peak during tendon loading.</div>
+      <div class="supp-brand">
+        <strong style="color:var(--amber)">Dose math matters — check the label:</strong><br>
+        The Shaw protocol is 15g collagen. Most products are 5-20g per scoop. Dose by grams, not scoops.<br><br>
+        <strong>Option A — CollagenUP 1 kg (best value):</strong> California Gold CollagenUP, marine + hyaluronic acid + Vit C. <strong>5g collagen per scoop</strong>, so you need <strong>3 scoops for the Shaw dose</strong>. Vit C at 3 scoops should land around your 50mg target (verify on current label). Bonus: hyaluronic acid for joint lubrication. A 1kg bag = ~60 training days at 3 scoops. Marine collagen = slightly faster amino acid kinetics — favorable for the 60-min pre-training timing.<br><br>
+        <strong>Option B — Vital Proteins (simpler dose):</strong> Vital Proteins Collagen Peptides. <strong>20g per scoop</strong> (bovine, NSF Certified for Sport), so 1 scoop covers the dose. Add <strong>50mg Vit C separately</strong> (any cheap ascorbic acid — even the one in your LE multi counts toward daily intake if timed right).<br><br>
+        <strong>Which is better for YOU:</strong> CollagenUP 1kg. The HA is useful for your knees, it's cheaper per gram, and the marine kinetics slightly favor the Shaw timing. Accept you're scooping 3× per training day. Take in water 60min before the session.
+      </div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--cyan)">
+      <div class="supp-name">Magnesium Glycinate <span class="tag tag-cyan" style="margin-left:4px">ADD</span></div>
+      <div class="supp-dose">400mg elemental Mg (4 tablets)</div>
+      <div class="supp-timing"><strong>With dinner (~19:00)</strong> — not pre-bed. Your surgical schedule makes bedtime inconsistent; dinner is a fixed anchor. Serum Mg peaks 2-3h post-dose, so sleep benefit still hits whenever you actually sleep. The chronic tissue saturation effect (over weeks) doesn't care about timing at all.</div>
+      <div class="supp-brand">
+        <strong>iHerb pick: Doctor's Best High Absorption Magnesium Lysinate Glycinate (Albion TRAACS), 240 tablets</strong> — TRAACS chelate is the patented bisglycinate used in most clinical trials, zero magnesium oxide. 240-count = 2 months at 4/day.<br><br>
+        <strong>Starting tolerance:</strong> 400mg with a full dinner can cause loose stools for some in week 1. If that happens, split to 2 tabs with lunch + 2 with dinner for 5-7 days, then consolidate once GI adapts.<br><br>
+        Skip: anything labeled "magnesium" without specifying the form (usually oxide, 4% bioavailable).
+      </div>
+    </div>
+
+    <div class="supp-card" style="border-color: var(--cyan)">
+      <div class="supp-name">Curcumin Phytosome <span class="tag tag-cyan" style="margin-left:4px">ADD</span></div>
+      <div class="supp-dose">500mg Meriva × 2/day (= 1000mg daily)</div>
+      <div class="supp-timing">With omega-3 meal. Daily et al. meta-analysis: comparable knee OA pain reduction to NSAIDs at 8-12 weeks. No GI/cardiovascular NSAID risk.</div>
+      <div class="supp-brand">
+        <strong>iHerb pick: Thorne Curcumin Phytosome Sustained Release, 120 capsules</strong> (Meriva-SR, 250mg per cap — take 2 per dose). Meriva = 29× absorption vs plain curcumin, the most-studied phytosome form.<br>
+        Skip: anything labeled "turmeric extract" without phytosome or BCM-95 formulation — underdosed junk.
+      </div>
+    </div>
+
+  </div>
+    </div>
+  </details>
+
+  <div class="sec-head"><h2>Final Shopping List — 3 Months</h2></div>
+  <div class="card" style="border-color: var(--lime)">
+    <div class="card-title" style="color: var(--lime)">🛒 One consolidated iHerb order</div>
+    <div style="font-size:0.85rem; line-height:1.6; margin-bottom:12px">
+      Ship to Taiwan via iHerb (tw.iherb.com). Free shipping at NT$1,250+. One order = 1/6 duty-free quota for the half-year. Pickup at 7-Eleven or FamilyMart 5-11 days later.
+    </div>
+  </div>
+  <div class="card" style="padding:0; overflow:hidden">
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Product</th><th>Size</th><th>Qty</th><th>Daily dose</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><strong>Nordic Naturals Ultimate Omega 2X</strong><br><span class="note">1,075 mg per softgel, rTG form</span></td>
+            <td>120 softgels</td>
+            <td>2</td>
+            <td>3 softgels (3.2g EPA+DHA)</td>
+            <td>~80 days/bottle × 2 = 160 days</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><strong>Nordic Naturals Vitamin D3 5000 IU</strong><br><span class="note">Cut to 1/day after lab result adjustment</span></td>
+            <td>120 softgels</td>
+            <td>1</td>
+            <td>1 softgel (dose per labs)</td>
+            <td>~4 months</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><strong>Life Extension Super K</strong><br><span class="note">MK-7 180mcg + MK-4 1000mcg + K1 1500mcg</span></td>
+            <td>90 softgels</td>
+            <td>1</td>
+            <td>1 softgel</td>
+            <td>~3 months</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><strong>California Gold CollagenUP</strong><br><span class="note">Marine + HA + Vit C, unflavored</span></td>
+            <td>1 kg</td>
+            <td>1</td>
+            <td>3 scoops = 15g (training days only)</td>
+            <td>~60 training days</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><strong>Doctor's Best Mg Lysinate Glycinate</strong><br><span class="note">Albion TRAACS chelate</span></td>
+            <td>240 tablets</td>
+            <td>1</td>
+            <td>4 tabs = 400mg elemental Mg</td>
+            <td>~60 days</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><strong>Thorne Curcumin Phytosome SR</strong><br><span class="note">Meriva phytosome, 29× bioavailable</span></td>
+            <td>120 caps</td>
+            <td>1</td>
+            <td>4 caps (1000mg Meriva)</td>
+            <td>~30 days — may need 2</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><strong>Life Extension Two-Per-Day</strong> <span class="tag tag-lime">(restock)</span></td>
+            <td>120 caps</td>
+            <td>1</td>
+            <td>2 caps</td>
+            <td>~60 days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note" style="padding:12px 16px; border-top:1px solid var(--border)">
+      <strong>Already on hand (no need to order):</strong> Nature Made D3 (keep as backup), Nordic Naturals Ultimate Omega (use up existing bottle first, then switch to 2X), Fitness Labs German Creatine (keep using current).<br><br>
+      <strong>Reorder cadence:</strong> Curcumin may need a 2nd bottle in month 2 (30-day supply at therapeutic dose). Mg will need reorder at month 2 as well. Everything else lasts 3+ months. If both need reorder, batch into a second iHerb order at month 2 mark.<br><br>
+      <strong>Estimated total:</strong> NT$5,500-7,000 depending on sales. iHerb runs 15-25% off brand weeks for Nordic Naturals, Thorne, Life Extension, and California Gold Nutrition routinely — watch the homepage.
+    </div>
+  </div>
+
+  <div class="sec-head"><h2>Labs to Order Before Starting</h2></div>
+  <div class="card">
+    <div class="rule-row"><div class="rule-icon">🧪</div><div><strong>Serum 25-OH-D (vitamin D):</strong> Dictates D3 dose. &lt;30 → 5000 IU × 8wk recheck; 30-40 → 2000-3000 IU; 40-60 → maintain with 1000 IU.</div></div>
+    <div class="rule-row"><div class="rule-icon">🧪</div><div><strong>HbA1c + fasting glucose + insulin:</strong> Baseline for Mounjaro tracking independent of weight loss.</div></div>
+    <div class="rule-row"><div class="rule-icon">🧪</div><div><strong>Lipid panel (LDL, HDL, TG, ApoB if available):</strong> Cuts often temporarily worsen lipids via mobilized FFAs; need a baseline.</div></div>
+    <div class="rule-row"><div class="rule-icon">🧪</div><div><strong>Urate + creatinine:</strong> Given febuxostat use + aggressive cut + high protein → purine turnover check.</div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">🧪</div><div><strong>Total testosterone + SHBG + free T:</strong> Optional but useful. Aggressive deficits can suppress T; baseline helps you catch it early if training performance tanks.</div></div>
+  </div>
+
+  <details class="collapsible">
+    <summary>Skip List — Reference</summary>
+    <div>
+      <div class="rule-row">
+        <div class="rule-icon">❌</div>
+        <div><strong>Glucosamine/Chondroitin</strong> — GAIT trial + MOST evidence weak. Omega-3 + curcumin + collagen does more at your OA severity.</div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">❌</div>
+        <div><strong>BCAAs / EAAs</strong> — redundant at 200g+ protein. Waste of money.</div>
+      </div>
+      <div class="rule-row">
+        <div class="rule-icon">❌</div>
+        <div><strong>Joint blends (Move Free, Osteo Bi-Flex)</strong> — underdosed polypharmacy. Use targeted doses above.</div>
+      </div>
+      <div class="rule-row" style="border-bottom:none">
+        <div class="rule-icon">❌</div>
+        <div><strong>Fat burners / thermogenics</strong> — no meaningful effect size, caffeine + yohimbine stacks cause BP/sleep issues on a deficit. Coffee does 90% of the job.</div>
+      </div>
+    </div>
+  </details>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     PHOTOS
+════════════════════════════════════════ -->
+<div id="panel-photos" class="panel">
+
+  <div class="sec-head"><h2>Log New Entry</h2></div>
+  <div class="card">
+    <div class="checkin-form">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="ph-date">
+      </div>
+      <div class="form-group">
+        <label>Weight (kg)</label>
+        <input type="number" id="ph-weight" step="0.1" placeholder="93.4">
+      </div>
+      <div class="form-group">
+        <label>Waist (cm)</label>
+        <input type="number" id="ph-waist" step="0.5" placeholder="97.5">
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" id="ph-notes" placeholder="Optional notes">
+      </div>
+    </div>
+    <button class="btn btn-lime" onclick="addPhotoEntry()">Add Entry</button>
+    <div class="note" style="margin-top:10px">Target cadence: weekly. Morning fasted, same general lighting/location. Front relaxed / front flexed / side / back. You have comp background — you know the water variance.</div>
+  </div>
+
+  <div class="sec-head"><h2>Photo Log</h2></div>
+  <div id="photo-log-container">
+    <!-- rendered by JS -->
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     RULES
+════════════════════════════════════════ -->
+<div id="panel-rules" class="panel">
+
+  <div class="sec-head"><h2>Hard Rules</h2></div>
+  <div class="card">
+    <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>No deep squats.</strong> No overhead press. No running. No plyometrics. Non-negotiable regardless of how good you feel.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>Protein floor: 200g/day.</strong> Even on meeting meal days. Even on chaos days. Non-negotiable — especially on Mounjaro.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>No supinated curls under load</strong> until R biceps tendon imaging clears.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>L knee effusion = upper + hinge only</strong> that session. Rare now, but the rule stands when it appears.</div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">🔒</div><div><strong>Sunday check-in is mandatory.</strong> Weight + waist + RHR + sessions + injury status.</div></div>
+  </div>
+
+  <div class="sec-head"><h2>Accountability</h2></div>
+  <div class="card">
+    <div class="rule-row"><div class="rule-icon">📅</div><div>Daily weigh-in logged. 10 seconds. No excuse.</div></div>
+    <div class="rule-row"><div class="rule-icon">🚫</div><div><strong>No week-long fasts</strong> as self-punishment. The plan works if executed. Fasting around it = ego-protection dressed as discipline.</div></div>
+    <div class="rule-row"><div class="rule-icon">🎯</div><div>Meeting meals don't justify skipping the deficit the rest of the week. One meal is noise. A pattern is a problem.</div></div>
+    <div class="rule-row"><div class="rule-icon">📊</div><div><strong>Abort criteria:</strong> weight stall 2+ weeks OR training perf crash &gt;15% → reverse diet 1 week at +300 kcal. Not a failure — a tool.</div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">💪</div><div>You've already gone 120→95kg. You know what this takes. Execute the plan.</div></div>
+  </div>
+
+  <div class="sec-head"><h2>Weekly Benchmarks</h2></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>Week</th><th>Target Weight</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>0 (now)</td><td>93.4 kg</td><td>Baseline · waist ~97-98cm</td></tr>
+        <tr><td>3</td><td>~91 kg</td><td>First meaningful waist change expected</td></tr>
+        <tr><td>6</td><td>~89 kg</td><td><strong>Deload week</strong> · 60% volume, 5 days</td></tr>
+        <tr><td>9</td><td>~86 kg</td><td>Closing in — reassess caloric targets</td></tr>
+        <tr><td>10-12</td><td>&lt;85 kg</td><td>Target. Waist &lt;90cm. Transition to maintenance.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<!-- QUICK LOG MODAL -->
+<div class="modal-backdrop" id="quickLogModal" onclick="if(event.target===this) closeQuickLog()">
+  <div class="modal">
+    <div class="modal-title">Quick Log — Today</div>
+    <div class="modal-field">
+      <label>Weight (kg) *</label>
+      <input type="number" id="ql-weight" step="0.1" min="50" max="200" inputmode="decimal" placeholder="93.4">
+    </div>
+    <div class="modal-field">
+      <label>Waist (cm) — optional</label>
+      <input type="number" id="ql-waist" step="0.5" min="60" max="150" inputmode="decimal" placeholder="97.5">
+    </div>
+    <div class="modal-field">
+      <label>Morning RHR (bpm) — optional</label>
+      <input type="number" id="ql-rhr" step="1" min="35" max="120" inputmode="numeric" placeholder="58">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeQuickLog()">Cancel</button>
+      <button class="btn btn-lime" onclick="saveQuickLog()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const BASELINE = { date: '2026-04-19', weight: 93.4, waist: 97.5 };
+const TARGETS = { weight: 85, waist: 90 };
+const PLAN_WEEKS = 12;
+const WEEK_START = new Date('2026-04-19');
+
+let checkins = [];
+let photoEntries = [];
+let mainChart = null;
+
+async function save() {
+  try {
+    localStorage.setItem('ak_checkins_v2', JSON.stringify(checkins));
+    localStorage.setItem('ak_photos_v2', JSON.stringify(photoEntries));
+    return true;
+  } catch(e) {
+    console.error('localStorage save FAILED:', e);
+    alert('⚠ Save failed! ' + e.message);
+    return false;
+  }
+}
+
+async function load() {
+  try {
+    const c = localStorage.getItem('ak_checkins_v2');
+    if (c) checkins = JSON.parse(c);
+    const p = localStorage.getItem('ak_photos_v2');
+    if (p) photoEntries = JSON.parse(p);
+  } catch(e) {
+    console.error('localStorage load failed:', e);
+  }
+
+  if (photoEntries.length === 0) {
+    photoEntries = [{
+      id: 'baseline',
+      date: '2026-04-19',
+      weight: 93.4,
+      waist: 97.5,
+      notes: 'Baseline v2. 1 month into new plan. Mounjaro on board.',
+      photos: [null,null,null,null]
+    }];
+  }
+}
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function showPanel(name, ev) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+
+  // Set active nav tab — prefer event target, otherwise find by onclick attribute
+  if (ev && ev.target && ev.target.classList && ev.target.classList.contains('nav-tab')) {
+    ev.target.classList.add('active');
+  } else {
+    const match = Array.from(document.querySelectorAll('.nav-tab')).find(t =>
+      t.getAttribute('onclick') && t.getAttribute('onclick').includes(`'${name}'`)
+    );
+    if (match) match.classList.add('active');
+  }
+
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'checkin') renderLog();
+  if (name === 'photos') renderPhotos();
+  if (name === 'foodlog') renderFoodLog();
+  if (name === 'training') openTodayTrainingBlock();
+}
+
+function openTodayTrainingBlock() {
+  const today = new Date().getDay(); // 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
+  // Close all
+  document.querySelectorAll('#panel-training .day-block').forEach(b => b.classList.remove('open'));
+  // Open today if it exists (training days: Sun/Mon/Tue/Thu/Sat)
+  const match = document.querySelector(`#panel-training .day-block[data-day="${today}"]`);
+  if (match) {
+    match.classList.add('open');
+    // Scroll to it after a tick
+    setTimeout(() => match.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+  } else {
+    // Wed/Fri: show a rest day notice and open Monday as reference
+    const monday = document.querySelector('#panel-training .day-block[data-day="1"]');
+    if (monday) monday.classList.add('open');
+  }
+}
+
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function getWeekNum() {
+  const now = new Date();
+  return Math.max(0, Math.floor((now - WEEK_START) / (7*24*60*60*1000)));
+}
+
+function getLastCheckin() {
+  if (checkins.length === 0) return BASELINE;
+  return [...checkins].sort((a,b) => b.date.localeCompare(a.date))[0];
+}
+
+function renderDashboard() {
+  const last = getLastCheckin();
+  const wLost = (BASELINE.weight - last.weight).toFixed(1);
+  const waistLost = (BASELINE.waist - (last.waist || BASELINE.waist)).toFixed(1);
+  const toTarget = Math.max(0, last.weight - TARGETS.weight).toFixed(1);
+  const week = getWeekNum();
+
+  document.getElementById('d-weight').textContent = last.weight + ' kg';
+  document.getElementById('d-weight-delta').textContent = wLost > 0 ? '▼ ' + wLost + ' kg lost' : 'baseline';
+  document.getElementById('d-waist').textContent = (last.waist || BASELINE.waist) + ' cm';
+  document.getElementById('d-waist-delta').textContent = waistLost > 0 ? '▼ ' + waistLost + ' cm lost' : 'baseline';
+  document.getElementById('d-to-target').textContent = toTarget + ' kg';
+  document.getElementById('d-week').textContent = 'W' + week;
+
+  if (checkins.length >= 2 && week > 0) {
+    const rate = (parseFloat(wLost) / week).toFixed(2);
+    document.getElementById('d-rate').textContent = rate;
+    const etaWeeks = rate > 0 ? Math.ceil(parseFloat(toTarget) / parseFloat(rate)) : '—';
+    document.getElementById('d-eta').textContent = etaWeeks;
+  } else {
+    document.getElementById('d-rate').textContent = '—';
+    document.getElementById('d-eta').textContent = '—';
+  }
+
+  const wPct = Math.min(100, (parseFloat(wLost) / (BASELINE.weight - TARGETS.weight)) * 100);
+  const waPct = Math.min(100, (parseFloat(waistLost) / (BASELINE.waist - TARGETS.waist)) * 100);
+  const tPct = Math.min(100, (week / PLAN_WEEKS) * 100);
+  document.getElementById('prog-weight-fill').style.width = wPct + '%';
+  document.getElementById('prog-waist-fill').style.width = waPct + '%';
+  document.getElementById('prog-time-fill').style.width = tPct + '%';
+  document.getElementById('prog-weight-label').textContent = wLost + ' kg / ' + (BASELINE.weight - TARGETS.weight).toFixed(1) + ' kg';
+  document.getElementById('prog-waist-label').textContent = waistLost + ' cm / ' + (BASELINE.waist - TARGETS.waist).toFixed(1) + ' cm';
+  document.getElementById('prog-time-label').textContent = 'Week ' + week + ' of ' + PLAN_WEEKS;
+
+  renderTodayChecklist();
+  renderTodayPlan();
+  renderChart();
+}
+
+// ═══════════════════════════════════════
+// DAILY CHECKLIST
+// ═══════════════════════════════════════
+const DAILY_CHECKLIST = {
+  morning: [
+    { id: 'mv_multi', label: 'LE Two-Per-Day × 2', sub: 'w/ breakfast' },
+    { id: 'mv_d3', label: 'Vitamin D3', sub: 'per labs' },
+    { id: 'mv_k2', label: 'LE Super K (MK-7)', sub: '1 softgel' },
+    { id: 'mv_omega_am', label: 'Ultimate Omega 2X × 2', sub: 'w/ fat' }
+  ],
+  training: [
+    { id: 'tr_collagen', label: 'CollagenUP 3 scoops', sub: '60 min pre-session', conditional: 'training' },
+    { id: 'tr_session', label: "Today's training session", sub: '', conditional: 'training' }
+  ],
+  dinner: [
+    { id: 'dn_omega_pm', label: 'Ultimate Omega 2X × 1', sub: 'w/ dinner' },
+    { id: 'dn_curcumin', label: 'Thorne Curcumin × 2 caps', sub: '' },
+    { id: 'dn_mg', label: 'Magnesium × 4 tabs', sub: '' },
+    { id: 'dn_creatine', label: 'Creatine 5g', sub: '' }
+  ],
+  logging: [
+    { id: 'lg_weight', label: 'Morning weigh-in', sub: 'fasted' },
+    { id: 'lg_rhr', label: 'RHR logged', sub: '' },
+    { id: 'lg_protein_check', label: 'Protein ≥ 200g', sub: 'Mounjaro risk' }
+  ]
+};
+
+function getChecklistKey() {
+  const today = new Date().toISOString().slice(0,10);
+  return 'ak_checklist_' + today;
+}
+
+function loadChecklistState() {
+  try {
+    const raw = localStorage.getItem(getChecklistKey());
+    return raw ? JSON.parse(raw) : {};
+  } catch(e) { return {}; }
+}
+
+function saveChecklistState(state) {
+  try {
+    localStorage.setItem(getChecklistKey(), JSON.stringify(state));
+    // Cleanup old checklists (>14 days)
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 14);
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith('ak_checklist_')) {
+        const dateStr = k.replace('ak_checklist_', '');
+        if (new Date(dateStr) < cutoff) localStorage.removeItem(k);
+      }
+    }
+  } catch(e) { console.error('Checklist save failed:', e); }
+}
+
+function toggleChecklistItem(id) {
+  const state = loadChecklistState();
+  state[id] = !state[id];
+  saveChecklistState(state);
+  renderTodayChecklist();
+}
+
+function renderTodayChecklist() {
+  const container = document.getElementById('today-checklist');
+  if (!container) return;
+  const state = loadChecklistState();
+  const today = new Date();
+  const dow = today.getDay();
+  const isTraining = [0,1,2,4,6].includes(dow);
+  const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow];
+  const dayType = isTraining ? 'training day (1800 kcal · 200g P)' : 'rest day (1600 kcal · 200g P)';
+  const dayMap = {
+    0: 'Metabolic Circuit',
+    1: 'Upper B (Push+Cuff)',
+    2: 'Upper A (Pull)',
+    3: 'Rest — often surgery',
+    4: 'Lower A (Hinge)',
+    5: 'Rest',
+    6: 'Lower B (Quad)'
+  };
+
+  const infoEl = document.getElementById('d-today-info');
+  if (infoEl) infoEl.textContent = dayName + ' · ' + dayMap[dow] + ' · ' + dayType;
+
+  const buildGroup = (title, items, countHidden) => {
+    const visible = items.filter(it => {
+      if (it.conditional === 'training' && !isTraining) return false;
+      return true;
+    });
+    if (visible.length === 0) return '';
+    const checked = visible.filter(it => state[it.id]).length;
+    const itemsHtml = visible.map(it => `
+      <div class="checklist-item ${state[it.id]?'checked':''}" onclick="toggleChecklistItem('${it.id}')">
+        <div class="checklist-box"></div>
+        <div class="checklist-label">${it.label}</div>
+        ${it.sub ? `<div class="checklist-sub">${it.sub}</div>` : ''}
+      </div>
+    `).join('');
+    return `<div class="checklist-group">
+      <div class="checklist-group-title">
+        <span>${title}</span>
+        <span style="color:${checked===visible.length?'var(--lime)':'var(--text3)'}">${checked}/${visible.length}</span>
+      </div>
+      ${itemsHtml}
+    </div>`;
+  };
+
+  container.innerHTML =
+    buildGroup('Morning', DAILY_CHECKLIST.morning) +
+    buildGroup('Pre-Training / Session', DAILY_CHECKLIST.training) +
+    buildGroup('Dinner', DAILY_CHECKLIST.dinner) +
+    buildGroup('Logging', DAILY_CHECKLIST.logging);
+}
+
+function quickLogWeight() {
+  // Pre-fill with today's existing entry if one exists
+  const today = new Date().toISOString().slice(0,10);
+  const existing = checkins.find(c => c.date === today);
+  document.getElementById('ql-weight').value = existing ? existing.weight : '';
+  document.getElementById('ql-waist').value = existing && existing.waist ? existing.waist : '';
+  document.getElementById('ql-rhr').value = existing && existing.rhr ? existing.rhr : '';
+  document.getElementById('quickLogModal').classList.add('active');
+  setTimeout(() => document.getElementById('ql-weight').focus(), 50);
+}
+
+function closeQuickLog() {
+  document.getElementById('quickLogModal').classList.remove('active');
+}
+
+async function saveQuickLog() {
+  const weight = parseFloat(document.getElementById('ql-weight').value);
+  const waist = document.getElementById('ql-waist').value;
+  const rhr = document.getElementById('ql-rhr').value;
+
+  if (isNaN(weight) || weight < 50 || weight > 200) {
+    alert('Enter a valid weight between 50-200 kg');
+    return;
+  }
+
+  const date = new Date().toISOString().slice(0,10);
+  const existing = checkins.findIndex(c => c.date === date);
+  const entry = {
+    id: existing >= 0 ? checkins[existing].id : 'ci_'+Date.now(),
+    date,
+    weight,
+    waist: waist ? parseFloat(waist) : null,
+    rhr: rhr ? parseInt(rhr) : null,
+    sessions: existing >= 0 ? checkins[existing].sessions : '',
+    protein: existing >= 0 ? checkins[existing].protein : '',
+    injury: existing >= 0 ? checkins[existing].injury : 'none',
+    duty: existing >= 0 ? checkins[existing].duty : 'no',
+    notes: existing >= 0 ? checkins[existing].notes : ''
+  };
+  if (existing >= 0) checkins[existing] = entry;
+  else checkins.push(entry);
+
+  await save();
+  renderDashboard();
+  renderLog();
+
+  // Auto-check the logging checklist items
+  const state = loadChecklistState();
+  state['lg_weight'] = true;
+  if (rhr) state['lg_rhr'] = true;
+  saveChecklistState(state);
+  renderTodayChecklist();
+
+  closeQuickLog();
+}
+
+function renderTodayPlan() {
+  const today = new Date();
+  const dow = today.getDay(); // 0=Sun,1=Mon,2=Tue,3=Wed,4=Thu,5=Fri,6=Sat
+  const dayMap = {
+    0: 'Metabolic Circuit (Sunday)',
+    1: 'Upper B (Monday)',
+    2: 'Upper A (Tuesday)',
+    3: 'Rest Day (Wed — often surgery)',
+    4: 'Lower A (Thursday)',
+    5: 'Rest Day (Friday)',
+    6: 'Lower B (Saturday)'
+  };
+  const isTraining = [0,1,2,4,6].includes(dow);
+  const isRest = [3,5].includes(dow);
+  const plan = document.getElementById('today-plan');
+
+  const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow];
+  const cals = isTraining ? '1800 kcal (training day)' : '1600 kcal (rest day)';
+
+  const trainingMeals = `
+    <div class="meal-row"><div class="meal-time">12:00</div><div><div class="meal-food">½ Anchor Chicken + Rice ÷8</div><div class="meal-macros">53g pro · 50g carbs · 460 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">15:00</div><div><div class="meal-food">30g Chicken Chips + 300g Kirkland Greek Yogurt</div><div class="meal-macros">56.2g pro · 315 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">19:00</div><div><div class="meal-food">Full Anchor Chicken + vegetables</div><div class="meal-macros">96g pro · ~520 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">20:30</div><div><div class="meal-food">2 Whey scoops</div><div class="meal-macros">60g pro · 280 kcal</div></div></div>`;
+
+  const restMeals = `
+    <div class="meal-row"><div class="meal-time">12:00</div><div><div class="meal-food">½ Anchor Chicken + vegetables (no rice)</div><div class="meal-macros">53g pro · ~290 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">15:00</div><div><div class="meal-food">30g Chicken Chips + 200g Greek Yogurt</div><div class="meal-macros">46.8g pro · 256 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">19:00</div><div><div class="meal-food">Full Anchor Chicken + vegetables</div><div class="meal-macros">96g pro · ~520 kcal</div></div></div>
+    <div class="meal-row"><div class="meal-time">20:30</div><div><div class="meal-food">2 Whey scoops</div><div class="meal-macros">60g pro · 280 kcal</div></div></div>`;
+
+  const meal = isTraining ? trainingMeals : restMeals;
+
+  plan.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px">
+      <div><span class="tag ${isTraining?'tag-lime':'tag-blue'}">${dayName}</span> <strong style="margin-left:8px">${dayMap[dow]}</strong></div>
+      <div class="note">${cals}</div>
+    </div>
+    ${meal}
+    <div class="meal-total"><span>Protein target</span><span class="meal-total-val">200g+ minimum (Mounjaro = compliance risk)</span></div>
+  `;
+}
+
+function renderChart() {
+  const ctx = document.getElementById('mainChart');
+  if (!ctx) return;
+
+  const allPoints = [
+    { date: BASELINE.date, weight: BASELINE.weight, waist: BASELINE.waist }
+  ];
+  checkins.forEach(c => {
+    if (c.weight) allPoints.push({ date: c.date, weight: parseFloat(c.weight), waist: c.waist ? parseFloat(c.waist) : null });
+  });
+  allPoints.sort((a,b) => a.date.localeCompare(b.date));
+
+  const labels = allPoints.map(p => p.date.slice(5));
+  const weights = allPoints.map(p => p.weight);
+  const waists = allPoints.map(p => p.waist);
+
+  if (mainChart) { mainChart.destroy(); }
+  mainChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Weight (kg)',
+          data: weights,
+          borderColor: '#c8f542',
+          backgroundColor: 'rgba(200,245,66,0.08)',
+          tension: 0.3,
+          fill: true,
+          pointBackgroundColor: '#c8f542',
+          pointRadius: 4,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Waist (cm)',
+          data: waists,
+          borderColor: '#3ff5c8',
+          backgroundColor: 'transparent',
+          tension: 0.3,
+          pointBackgroundColor: '#3ff5c8',
+          pointRadius: 4,
+          spanGaps: true,
+          yAxisID: 'y2'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { labels: { color: '#9090b8', font: { family: 'JetBrains Mono', size: 11 } } }
+      },
+      scales: {
+        x: { ticks: { color: '#5a5a80', font: { family: 'JetBrains Mono', size: 10 } }, grid: { color: '#2a2a42' } },
+        y: {
+          ticks: { color: '#c8f542', font: { family: 'JetBrains Mono', size: 10 } },
+          grid: { color: '#2a2a42' },
+          position: 'left'
+        },
+        y2: {
+          ticks: { color: '#3ff5c8', font: { family: 'JetBrains Mono', size: 10 } },
+          grid: { display: false },
+          position: 'right'
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// CHECK-IN
+// ═══════════════════════════════════════
+async function addCheckin() {
+  const date = document.getElementById('ci-date').value;
+  const weight = document.getElementById('ci-weight').value;
+  const waist = document.getElementById('ci-waist').value;
+  const rhr = document.getElementById('ci-rhr').value;
+  const sessions = document.getElementById('ci-sessions').value;
+  const protein = document.getElementById('ci-protein').value;
+  const injury = document.getElementById('ci-injury').value;
+  const duty = document.getElementById('ci-duty').value;
+  const notes = document.getElementById('ci-notes').value;
+
+  if (!date || !weight) { alert('Date and weight are required'); return; }
+
+  checkins.push({
+    id: 'ci_'+Date.now(), date,
+    weight: parseFloat(weight),
+    waist: waist ? parseFloat(waist) : null,
+    rhr: rhr ? parseInt(rhr) : null,
+    sessions, protein, injury, duty, notes
+  });
+  await save();
+  renderLog();
+  renderGuidance();
+
+  ['ci-weight','ci-waist','ci-rhr','ci-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('ci-sessions').value = '';
+  document.getElementById('ci-protein').value = '';
+  document.getElementById('ci-injury').value = 'none';
+  document.getElementById('ci-duty').value = 'no';
+}
+
+function renderGuidance() {
+  // Show assessment based on most recent entries
+  const last = getLastCheckin();
+  if (!last || !last.rhr) return;
+  const recent = [...checkins].sort((a,b) => b.date.localeCompare(a.date)).slice(0,7).filter(c => c.rhr);
+  if (recent.length < 3) return;
+  const avgRhr = recent.slice(0,7).reduce((s,c) => s+c.rhr, 0) / recent.length;
+  const highCount = recent.slice(0,3).filter(c => c.rhr > avgRhr + 7).length;
+  const g = document.getElementById('ci-guidance');
+  if (highCount >= 3) {
+    g.style.display = 'block';
+    g.style.color = 'var(--red)';
+    g.innerHTML = '⚠ RHR elevated +7 bpm x 3 consecutive days. Downgrade next session to 60-70% volume or take a rest day.';
+  } else {
+    g.style.display = 'none';
+  }
+}
+
+function getAssessment(delta, sessions, protein) {
+  if (delta === null) return ['assess-ok', '— baseline'];
+  if (delta <= -0.3 && protein === '200g+ ✓' && sessions >= 3) return ['assess-good', '✓ on track'];
+  if (delta <= 0 && sessions >= 2) return ['assess-ok', '~ acceptable'];
+  if (delta > 0.5) return ['assess-bad', '✗ weight up'];
+  if (sessions < 2) return ['assess-bad', '✗ missed sessions'];
+  return ['assess-ok', '~ review'];
+}
+
+function renderLog() {
+  const tbody = document.getElementById('log-tbody');
+  if (!tbody) return;
+  const sorted = [...checkins].sort((a,b) => b.date.localeCompare(a.date));
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="10" style="color:var(--text3); text-align:center; padding:20px">No check-ins yet — log your first entry above</td></tr>';
+    return;
+  }
+  const allSorted = [...checkins].sort((a,b) => a.date.localeCompare(b.date));
+  tbody.innerHTML = sorted.map(c => {
+    const idx = allSorted.findIndex(x => x.id === c.id);
+    const prev = idx > 0 ? allSorted[idx-1] : null;
+    const delta = prev ? (c.weight - prev.weight).toFixed(1) : null;
+    const deltaClass = delta === null ? 'delta-neu' : parseFloat(delta) <= 0 ? 'delta-down' : 'delta-up';
+    const deltaStr = delta === null ? '—' : (parseFloat(delta) > 0 ? '+' : '') + delta + ' kg';
+    return `<tr>
+      <td style="font-family:var(--mono); font-size:0.75rem">${c.date}</td>
+      <td style="font-weight:700">${c.weight} kg</td>
+      <td class="${deltaClass}" style="font-family:var(--mono); font-size:0.75rem">${deltaStr}</td>
+      <td>${c.waist ? c.waist + ' cm' : '—'}</td>
+      <td style="font-family:var(--mono); font-size:0.75rem">${c.rhr || '—'}</td>
+      <td>${c.sessions || '—'}</td>
+      <td style="font-size:0.75rem">${c.protein || '—'}</td>
+      <td>${c.injury && c.injury !== 'none' ? '<span class="tag tag-amber">'+c.injury+'</span>' : '—'}${c.duty==='yes'?' <span class="tag tag-red">duty</span>':''}</td>
+      <td style="font-size:0.75rem; color:var(--text2)">${(c.notes||'').slice(0,40)}</td>
+      <td><button class="food-entry-del" onclick="deleteCheckin('${c.id}')" title="Delete">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function deleteCheckin(id) {
+  const entry = checkins.find(c => c.id === id);
+  if (!entry) return;
+  const confirmed = confirm(`Delete check-in for ${entry.date} (${entry.weight} kg)?`);
+  if (!confirmed) return;
+  checkins = checkins.filter(c => c.id !== id);
+  await save();
+  renderLog();
+  renderDashboard();
+}
+
+function exportCSV() {
+  const rows = [['Date','Weight_kg','Waist_cm','RHR','Sessions','Protein','Injury','PostDuty','Notes']];
+  [...checkins].sort((a,b)=>a.date.localeCompare(b.date)).forEach(c => {
+    rows.push([c.date, c.weight, c.waist||'', c.rhr||'', c.sessions||'', c.protein||'', c.injury||'', c.duty||'', (c.notes||'').replace(/,/g,'')]);
+  });
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'AK_recomp_v2_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+// ═══════════════════════════════════════
+// TRAINING
+// ═══════════════════════════════════════
+function toggleDay(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════
+// PHOTOS
+// ═══════════════════════════════════════
+const PHOTO_VIEWS = ['Front Relaxed', 'Front Flexed', 'Side', 'Back'];
+
+async function addPhotoEntry() {
+  const date = document.getElementById('ph-date').value;
+  const weight = document.getElementById('ph-weight').value;
+  const waist = document.getElementById('ph-waist').value;
+  const notes = document.getElementById('ph-notes').value;
+  if (!date || !weight) { alert('Date and weight required'); return; }
+  photoEntries.push({ id: 'ph_'+Date.now(), date, weight: parseFloat(weight), waist: waist ? parseFloat(waist) : null, notes, photos: [null,null,null,null] });
+  await save();
+  renderPhotos();
+  document.getElementById('ph-date').value = '';
+  document.getElementById('ph-weight').value = '';
+  document.getElementById('ph-waist').value = '';
+  document.getElementById('ph-notes').value = '';
+}
+
+async function uploadPhoto(e, entryId, slotIdx) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async ev => {
+    const entry = photoEntries.find(x => x.id === entryId);
+    if (entry) { entry.photos[slotIdx] = ev.target.result; await save(); renderPhotos(); }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function removePhoto(entryId, slotIdx) {
+  const entry = photoEntries.find(x => x.id === entryId);
+  if (entry) { entry.photos[slotIdx] = null; await save(); renderPhotos(); }
+}
+
+async function deletePhotoEntry(id) {
+  const entry = photoEntries.find(e => e.id === id);
+  if (!entry) return;
+  const confirmed = confirm(`Delete photo entry for ${entry.date} (${entry.weight} kg)?\n\nThis will delete the entry and all photos in it.`);
+  if (!confirmed) return;
+  photoEntries = photoEntries.filter(e => e.id !== id);
+  await save();
+  renderPhotos();
+}
+
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('active');
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
+
+function renderPhotos() {
+  const container = document.getElementById('photo-log-container');
+  if (!container) return;
+  const sorted = [...photoEntries].sort((a,b) => b.date.localeCompare(a.date));
+  const allSorted = [...photoEntries].sort((a,b) => a.date.localeCompare(b.date));
+
+  container.innerHTML = sorted.map(entry => {
+    const idx = allSorted.findIndex(x => x.id === entry.id);
+    const prev = idx > 0 ? allSorted[idx-1] : null;
+    const dw = prev ? (entry.weight - prev.weight).toFixed(1) : null;
+    const dwa = (prev && entry.waist && prev.waist) ? (entry.waist - prev.waist).toFixed(1) : null;
+
+    const slots = PHOTO_VIEWS.map((v, vi) => {
+      if (entry.photos[vi]) {
+        return `<div class="photo-slot">
+          <img src="${entry.photos[vi]}" onclick="openLightbox('${entry.photos[vi]}')">
+          <button class="photo-remove" onclick="removePhoto('${entry.id}',${vi})">✕</button>
+        </div>`;
+      }
+      return `<div class="photo-slot">
+        <div class="photo-slot-icon">＋</div>
+        <div class="photo-slot-label">${v}</div>
+        <input type="file" accept="image/*" onchange="uploadPhoto(event,'${entry.id}',${vi})">
+      </div>`;
+    }).join('');
+
+    return `<div class="photo-entry">
+      <div class="photo-entry-header">
+        <div>
+          <strong>${entry.date}</strong>
+          <span class="tag ${entry.id==='baseline'?'tag-amber':'tag-lime'}" style="margin-left:8px">${entry.id==='baseline'?'Baseline':'Entry'}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px">
+          <div style="font-size:0.75rem; color:var(--text3); font-family:var(--mono)">${entry.notes||''}</div>
+          ${entry.id!=='baseline' ? `<button class="food-entry-del" onclick="deletePhotoEntry('${entry.id}')" title="Delete entry">✕</button>` : ''}
+        </div>
+      </div>
+      <div class="photo-grid-4">${slots}</div>
+      <div class="photo-metrics">
+        <div class="pm">
+          <div class="pm-label">Weight</div>
+          <div class="pm-val">${entry.weight} kg</div>
+          ${dw!==null?`<div class="pm-delta ${parseFloat(dw)<0?'delta-down':parseFloat(dw)>0?'delta-up':'delta-neu'}">${parseFloat(dw)<0?'▼':'▲'} ${Math.abs(dw)} kg</div>`:''}
+        </div>
+        ${entry.waist?`<div class="pm">
+          <div class="pm-label">Waist</div>
+          <div class="pm-val">${entry.waist} cm</div>
+          ${dwa!==null?`<div class="pm-delta ${parseFloat(dwa)<0?'delta-down':parseFloat(dwa)>0?'delta-up':'delta-neu'}">${parseFloat(dwa)<0?'▼':'▲'} ${Math.abs(dwa)} cm</div>`:''}
+        </div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// FOOD LOG
+// ═══════════════════════════════════════
+
+// Anchor food library — your existing meal prep items
+const ANCHOR_FOODS = [
+  { name: 'Whey scoop', protein: 30, carbs: 2, fat: 1, kcal: 140 },
+  { name: '½ Anchor Chicken', protein: 48, carbs: 0, fat: 5, kcal: 235 },
+  { name: 'Full Anchor Chicken', protein: 96, carbs: 0, fat: 10, kcal: 465 },
+  { name: 'Rice portion (÷8)', protein: 5, carbs: 50, fat: 0, kcal: 225 },
+  { name: 'Rice portion (÷6)', protein: 7, carbs: 66, fat: 0, kcal: 300 },
+  { name: '30g Chicken Chips', protein: 28, carbs: 0, fat: 3, kcal: 138 },
+  { name: '50g Chicken Chips', protein: 46, carbs: 0, fat: 5, kcal: 230 },
+  { name: '300g Greek Yogurt', protein: 28, carbs: 16, fat: 0, kcal: 177 },
+  { name: '200g Greek Yogurt', protein: 19, carbs: 11, fat: 0, kcal: 118 },
+  { name: '7-11 Chicken Breast', protein: 30, carbs: 0, fat: 2, kcal: 150 },
+  { name: 'Vegetables (mixed)', protein: 3, carbs: 10, fat: 0, kcal: 55 },
+  { name: 'Collagen UP (3 scoops)', protein: 13, carbs: 0, fat: 0, kcal: 55 }
+];
+
+// Restaurant/meeting shortcuts — rough estimates
+const SHORTCUT_FOODS = [
+  { name: 'Steak (150g, moderate)', protein: 40, carbs: 0, fat: 15, kcal: 295 },
+  { name: 'Sashimi platter (mixed)', protein: 40, carbs: 0, fat: 8, kcal: 232 },
+  { name: 'Grilled fish (200g)', protein: 44, carbs: 0, fat: 10, kcal: 266 },
+  { name: 'Restaurant meal (protein-focused)', protein: 45, carbs: 30, fat: 15, kcal: 435 },
+  { name: 'Hosted dinner (mixed plate)', protein: 30, carbs: 40, fat: 20, kcal: 460 },
+  { name: 'Catered buffet plate', protein: 35, carbs: 50, fat: 25, kcal: 565 },
+  { name: 'Hospital cafeteria meal', protein: 30, carbs: 40, fat: 15, kcal: 415 },
+  { name: 'Coffee (black)', protein: 0, carbs: 0, fat: 0, kcal: 5 },
+  { name: 'Coffee w/ milk splash', protein: 1, carbs: 2, fat: 1, kcal: 20 },
+  { name: 'Hard boiled egg', protein: 6, carbs: 0, fat: 5, kcal: 70 },
+  { name: '1 tbsp olive oil', protein: 0, carbs: 0, fat: 14, kcal: 120 },
+  { name: '1 drink (spirits 45ml)', protein: 0, carbs: 0, fat: 0, kcal: 100 }
+];
+
+let foodLog = {}; // keyed by 'YYYY-MM-DD' → array of entries
+
+async function loadFoodLog() {
+  try {
+    const r = localStorage.getItem('ak_foodlog');
+    if (r) foodLog = JSON.parse(r);
+  } catch(e) {
+    console.error('Food log load failed:', e);
+  }
+  return true;
+}
+
+async function saveFoodLog() {
+  try {
+    localStorage.setItem('ak_foodlog', JSON.stringify(foodLog));
+    return true;
+  } catch(e) {
+    console.error('Food log save FAILED:', e);
+    alert('⚠ Save failed! ' + e.message);
+    return false;
+  }
+}
+
+function getFoodLogDate() {
+  return document.getElementById('fl-date').value || new Date().toISOString().slice(0,10);
+}
+
+function foodLogToday() {
+  document.getElementById('fl-date').value = new Date().toISOString().slice(0,10);
+  renderFoodLog();
+}
+
+function foodLogDayShift(delta) {
+  const current = new Date(getFoodLogDate());
+  current.setDate(current.getDate() + delta);
+  document.getElementById('fl-date').value = current.toISOString().slice(0,10);
+  renderFoodLog();
+}
+
+function isTrainingDay(dateStr) {
+  const dow = new Date(dateStr).getUTCDay();
+  return [0,1,2,4,6].includes(dow); // Sun, Mon, Tue, Thu, Sat
+}
+
+function getDailyTarget(dateStr) {
+  return isTrainingDay(dateStr) ? { kcal: 1800, protein: 200 } : { kcal: 1600, protein: 200 };
+}
+
+function renderQuickButtons() {
+  const anchorGrid = document.getElementById('quick-anchor-grid');
+  const shortcutGrid = document.getElementById('quick-shortcut-grid');
+  if (!anchorGrid || !shortcutGrid) return;
+
+  anchorGrid.innerHTML = ANCHOR_FOODS.map((f, i) => `
+    <button class="quick-btn" onclick="addAnchorFood(${i})">
+      <div class="quick-btn-name">${f.name}</div>
+      <div class="quick-btn-macros">P${f.protein}g · C${f.carbs}g · F${f.fat}g</div>
+      <div class="quick-btn-kcal">${f.kcal} kcal</div>
+    </button>
+  `).join('');
+
+  shortcutGrid.innerHTML = SHORTCUT_FOODS.map((f, i) => `
+    <button class="quick-btn" onclick="addShortcutFood(${i})">
+      <div class="quick-btn-name">${f.name}</div>
+      <div class="quick-btn-macros">P${f.protein}g · C${f.carbs}g · F${f.fat}g</div>
+      <div class="quick-btn-kcal">${f.kcal} kcal</div>
+    </button>
+  `).join('');
+}
+
+async function addAnchorFood(idx) {
+  const f = ANCHOR_FOODS[idx];
+  await addFoodEntry({ ...f, source: 'anchor' });
+}
+
+async function addShortcutFood(idx) {
+  const f = SHORTCUT_FOODS[idx];
+  await addFoodEntry({ ...f, source: 'shortcut' });
+}
+
+async function addCustomFood() {
+  const name = document.getElementById('fl-custom-name').value.trim();
+  const protein = parseFloat(document.getElementById('fl-custom-protein').value) || 0;
+  const carbs = parseFloat(document.getElementById('fl-custom-carbs').value) || 0;
+  const fat = parseFloat(document.getElementById('fl-custom-fat').value) || 0;
+
+  if (!name) { alert('Enter a food name'); return; }
+
+  const kcal = Math.round(protein * 4 + carbs * 4 + fat * 9);
+  await addFoodEntry({ name, protein, carbs, fat, kcal, source: 'custom' });
+
+  // Clear form
+  document.getElementById('fl-custom-name').value = '';
+  document.getElementById('fl-custom-protein').value = '';
+  document.getElementById('fl-custom-carbs').value = '';
+  document.getElementById('fl-custom-fat').value = '';
+}
+
+async function addFoodEntry(entry) {
+  const date = getFoodLogDate();
+  if (!foodLog[date]) foodLog[date] = [];
+  const now = new Date();
+  const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  foodLog[date].push({
+    id: 'fl_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
+    time,
+    ...entry
+  });
+  await saveFoodLog();
+  renderFoodLog();
+}
+
+async function deleteFoodEntry(id) {
+  const date = getFoodLogDate();
+  if (!foodLog[date]) return;
+  foodLog[date] = foodLog[date].filter(e => e.id !== id);
+  await saveFoodLog();
+  renderFoodLog();
+}
+
+function renderFoodLog() {
+  const date = getFoodLogDate();
+  const entries = foodLog[date] || [];
+  const target = getDailyTarget(date);
+
+  // Totals
+  const totals = entries.reduce((acc, e) => ({
+    protein: acc.protein + (e.protein || 0),
+    carbs: acc.carbs + (e.carbs || 0),
+    fat: acc.fat + (e.fat || 0),
+    kcal: acc.kcal + (e.kcal || 0)
+  }), { protein: 0, carbs: 0, fat: 0, kcal: 0 });
+
+  // Update dashboard
+  document.getElementById('fl-protein').textContent = Math.round(totals.protein);
+  document.getElementById('fl-protein-target').textContent = target.protein;
+  document.getElementById('fl-kcal').textContent = Math.round(totals.kcal);
+  document.getElementById('fl-kcal-target').textContent = target.kcal;
+  document.getElementById('fl-carbs').textContent = Math.round(totals.carbs);
+  document.getElementById('fl-fat').textContent = Math.round(totals.fat);
+
+  const proteinPct = Math.min(100, (totals.protein / target.protein) * 100);
+  const kcalPct = Math.min(100, (totals.kcal / target.kcal) * 100);
+  document.getElementById('fl-protein-bar').style.width = proteinPct + '%';
+  document.getElementById('fl-kcal-bar').style.width = kcalPct + '%';
+
+  // Day type indicator
+  const dayType = isTrainingDay(date) ? 'Training day · 1800 kcal / 200g protein' : 'Rest day · 1600 kcal / 200g protein';
+  document.getElementById('fl-day-type').textContent = dayType;
+
+  // Protein alert logic
+  const alert = document.getElementById('fl-alert');
+  const now = new Date();
+  const isToday = date === now.toISOString().slice(0,10);
+  const hour = now.getHours();
+
+  alert.classList.remove('active','warn','good');
+
+  if (isToday) {
+    if (totals.protein >= target.protein) {
+      alert.classList.add('active','good');
+      alert.textContent = '✓ Protein target hit. Maintain through the rest of the day.';
+    } else if (hour >= 20 && totals.protein < target.protein - 30) {
+      alert.classList.add('active');
+      alert.textContent = '⚠ Critical: ' + (target.protein - Math.round(totals.protein)) + 'g protein short with your eating window closing. Add 1-2 whey scoops now.';
+    } else if (hour >= 17 && totals.protein < target.protein * 0.6) {
+      alert.classList.add('active','warn');
+      alert.textContent = '⚠ Behind on protein. Need ' + (target.protein - Math.round(totals.protein)) + 'g more before ~21:00. Plan your dinner accordingly.';
+    } else if (hour >= 14 && totals.protein < target.protein * 0.3) {
+      alert.classList.add('active','warn');
+      alert.textContent = 'Slow start on protein today — consider a whey or chicken chips snack before 15:00.';
+    }
+  }
+
+  // Entries list
+  const entriesEl = document.getElementById('fl-entries');
+  const emptyEl = document.getElementById('fl-empty');
+  if (entries.length === 0) {
+    entriesEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+  } else {
+    emptyEl.style.display = 'none';
+    const sorted = [...entries].sort((a,b) => a.time.localeCompare(b.time));
+    entriesEl.innerHTML = sorted.map(e => `
+      <div class="food-entry-row">
+        <div class="food-entry-time">${e.time}</div>
+        <div class="food-entry-name">${e.name}</div>
+        <div class="food-entry-macros">P${Math.round(e.protein)} · ${Math.round(e.kcal)} kcal</div>
+        <button class="food-entry-del" onclick="deleteFoodEntry('${e.id}')" title="Delete">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // Weekly summary
+  renderWeeklyFoodSummary();
+}
+
+function renderWeeklyFoodSummary() {
+  const el = document.getElementById('fl-weekly');
+  if (!el) return;
+  const today = new Date();
+  const rows = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0,10);
+    const entries = foodLog[dateStr] || [];
+    const protein = entries.reduce((s,e) => s + (e.protein||0), 0);
+    const kcal = entries.reduce((s,e) => s + (e.kcal||0), 0);
+    const target = getDailyTarget(dateStr);
+    const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    const hit = protein >= target.protein * 0.9;
+    const pct = Math.min(100, (protein/target.protein)*100);
+    rows.push(`
+      <div class="weekly-summary-row">
+        <div class="ws-date">${dayName} ${dateStr.slice(5)}</div>
+        <div class="ws-bar"><div class="ws-bar-fill" style="width:${pct}%; background:${hit?'var(--lime)':protein>target.protein*0.7?'var(--amber)':'var(--red)'}"></div></div>
+        <div class="ws-num" style="color:${hit?'var(--lime)':'var(--text2)'}">${Math.round(protein)}g P</div>
+        <div class="ws-num" style="color:var(--text3)">${Math.round(kcal)} kcal</div>
+      </div>
+    `);
+  }
+  el.innerHTML = rows.join('');
+}
+
+function exportFoodLogCSV() {
+  const rows = [['Date','Time','Food','Protein_g','Carbs_g','Fat_g','Kcal','Source']];
+  const sorted = Object.keys(foodLog).sort();
+  sorted.forEach(date => {
+    foodLog[date].forEach(e => {
+      rows.push([date, e.time, (e.name||'').replace(/,/g,';'), e.protein, e.carbs, e.fat, e.kcal, e.source||'']);
+    });
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  a.download = 'AK_foodlog_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+async function copyFoodDayForClaude() {
+  const date = getFoodLogDate();
+  const entries = foodLog[date] || [];
+  const target = getDailyTarget(date);
+  const totals = entries.reduce((a,e) => ({
+    protein: a.protein + (e.protein||0),
+    carbs: a.carbs + (e.carbs||0),
+    fat: a.fat + (e.fat||0),
+    kcal: a.kcal + (e.kcal||0)
+  }), {protein:0,carbs:0,fat:0,kcal:0});
+
+  const lines = [...entries].sort((a,b) => a.time.localeCompare(b.time))
+    .map(e => `  ${e.time} · ${e.name} · P${Math.round(e.protein)}g C${Math.round(e.carbs)}g F${Math.round(e.fat)}g · ${Math.round(e.kcal)} kcal`);
+
+  const promptText = `Food log ${date} (${isTrainingDay(date) ? 'training' : 'rest'} day):\n\n${lines.join('\n') || '  (no entries)'}\n\nTotals: ${Math.round(totals.protein)}g P · ${Math.round(totals.carbs)}g C · ${Math.round(totals.fat)}g F · ${Math.round(totals.kcal)} kcal\nTargets: ${target.protein}g P floor / ${target.kcal} kcal\n\nAssess: protein compliance, calorie accuracy, food choice quality. Flag anything suspicious.`;
+
+  try {
+    await navigator.clipboard.writeText(promptText);
+    alert('Copied. Paste in Claude chat.');
+  } catch(e) {
+    // Clipboard API not available — show text in a modal-like alert the user can manually select
+    const ta = document.createElement('textarea');
+    ta.value = promptText;
+    ta.style.cssText = 'position:fixed; top:20px; left:20px; width:calc(100% - 40px); height:60vh; z-index:9999; background:#0f0f1a; color:#e8e8f4; padding:12px; border:1px solid #c8f542; border-radius:8px; font-family:monospace; font-size:12px';
+    document.body.appendChild(ta);
+    ta.select();
+    setTimeout(() => { if (ta.parentNode) ta.parentNode.removeChild(ta); }, 15000);
+    alert('Clipboard blocked. Text shown for 15 seconds — select and copy manually.');
+  }
+}
+
+async function testStorage() {
+  const el = document.getElementById('fl-storage-test');
+  el.style.display = 'block';
+  el.innerHTML = 'Testing...';
+
+  const lines = [];
+  const testKey = 'ak_storage_test_' + Date.now();
+  const testValue = 'test_' + Math.random();
+
+  // Test localStorage (the only layer we use now)
+  try {
+    localStorage.setItem(testKey, testValue);
+    const got = localStorage.getItem(testKey);
+    if (got === testValue) {
+      lines.push('<strong>localStorage write/read:</strong> <span style="color:var(--lime)">OK</span>');
+      localStorage.removeItem(testKey);
+    } else {
+      lines.push('<strong>localStorage write/read:</strong> <span style="color:var(--red)">MISMATCH</span>');
+    }
+  } catch(e) {
+    lines.push(`<strong>localStorage error:</strong> <span style="color:var(--red)">${e.message}</span>`);
+  }
+
+  // Check what's currently stored
+  try {
+    const stored = localStorage.getItem('ak_foodlog');
+    const parsed = stored ? JSON.parse(stored) : {};
+    const dayCount = Object.keys(parsed).length;
+    const entryCount = Object.values(parsed).reduce((s, arr) => s + arr.length, 0);
+    lines.push(`<strong>Food log stored:</strong> ${dayCount} days, ${entryCount} entries`);
+
+    const checkinsStored = localStorage.getItem('ak_checkins_v2');
+    const checkinsParsed = checkinsStored ? JSON.parse(checkinsStored) : [];
+    lines.push(`<strong>Check-ins stored:</strong> ${checkinsParsed.length} entries`);
+  } catch(e) {
+    lines.push(`<strong>Read error:</strong> <span style="color:var(--red)">${e.message}</span>`);
+  }
+
+  // In-memory state
+  const memDayCount = Object.keys(foodLog).length;
+  const memEntryCount = Object.values(foodLog).reduce((s, arr) => s + arr.length, 0);
+  lines.push(`<strong>Food log in memory:</strong> ${memDayCount} days, ${memEntryCount} entries`);
+
+  lines.push('<br><em style="color:var(--text3)">If stored &gt; 0 but memory = 0, try reloading the page.</em>');
+  lines.push('<em style="color:var(--text3)">If both = 0 after you added entries, something is blocking localStorage — check browser privacy settings.</em>');
+
+  el.innerHTML = lines.join('<br>');
+}
+
+// ═══════════════════════════════════════
+// WEEKLY REVIEW
+// ═══════════════════════════════════════
+function computeWeekStats(daysBack = 7) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - daysBack);
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const recent = [...checkins].filter(c => c.date >= cutoffStr).sort((a,b) => a.date.localeCompare(b.date));
+
+  if (recent.length === 0) return null;
+
+  const first = recent[0];
+  const last = recent[recent.length - 1];
+
+  // Compare to one-week-prior entries for delta
+  const priorCutoff = new Date(cutoff);
+  priorCutoff.setDate(priorCutoff.getDate() - daysBack);
+  const prior = [...checkins]
+    .filter(c => c.date >= priorCutoff.toISOString().slice(0,10) && c.date < cutoffStr)
+    .sort((a,b) => b.date.localeCompare(a.date));
+  const priorLast = prior.length > 0 ? prior[0] : null;
+
+  const weightDelta = priorLast ? (last.weight - priorLast.weight).toFixed(1) : null;
+  const waistDelta = (priorLast && priorLast.waist && last.waist) ? (last.waist - priorLast.waist).toFixed(1) : null;
+
+  const withRhr = recent.filter(c => c.rhr);
+  const avgRhr = withRhr.length > 0 ? (withRhr.reduce((s,c) => s+c.rhr, 0) / withRhr.length).toFixed(0) : null;
+
+  const priorWithRhr = prior.filter(c => c.rhr);
+  const priorAvgRhr = priorWithRhr.length > 0 ? (priorWithRhr.reduce((s,c) => s+c.rhr, 0) / priorWithRhr.length).toFixed(0) : null;
+  const rhrDelta = (avgRhr && priorAvgRhr) ? (avgRhr - priorAvgRhr).toFixed(0) : null;
+
+  const sessionsReported = recent.map(c => parseInt(c.sessions)||0).filter(n => n>0);
+  const maxSessions = sessionsReported.length > 0 ? Math.max(...sessionsReported) : 0;
+
+  const proteinCompliance = recent.filter(c => c.protein === '200g+ ✓').length;
+  const proteinBelow = recent.filter(c => c.protein === '<160g ✗').length;
+
+  const injuryDays = recent.filter(c => c.injury && c.injury !== 'none').length;
+  const dutyDays = recent.filter(c => c.duty === 'yes').length;
+
+  const notes = recent.filter(c => c.notes).map(c => `  ${c.date}: ${c.notes}`);
+
+  const week = getWeekNum();
+  const toTarget = (last.weight - TARGETS.weight).toFixed(1);
+
+  return {
+    week, entries: recent.length, first, last,
+    weightDelta, waistDelta,
+    avgRhr, rhrDelta,
+    maxSessions, proteinCompliance, proteinBelow,
+    injuryDays, dutyDays,
+    notes, toTarget,
+    totalLostFromBaseline: (BASELINE.weight - last.weight).toFixed(1),
+    totalWaistFromBaseline: (last.waist && BASELINE.waist) ? (BASELINE.waist - last.waist).toFixed(1) : null
+  };
+}
+
+function generateWeeklyReview() {
+  const s = computeWeekStats(7);
+  const out = document.getElementById('review-output');
+  if (!s) {
+    out.style.display = 'block';
+    out.textContent = 'No check-ins in the last 7 days. Log entries to generate a review.';
+    return;
+  }
+
+  // Assessment logic
+  let assessment = '';
+  const wd = s.weightDelta ? parseFloat(s.weightDelta) : null;
+  if (wd === null) assessment = '⚠ No prior-week data for comparison';
+  else if (wd <= -0.7) assessment = '✓ ON TRACK · weight loss pace healthy';
+  else if (wd <= -0.3) assessment = '~ ACCEPTABLE · slower than target but moving';
+  else if (wd <= 0.2) assessment = '⚠ STALL · investigate adherence or metabolic adaptation';
+  else assessment = '✗ WEIGHT UP · something broke this week';
+
+  const proteinPct = s.entries > 0 ? Math.round((s.proteinCompliance / s.entries) * 100) : 0;
+
+  const report =
+`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WEEK ${s.week} REPORT CARD · ${new Date().toISOString().slice(0,10)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WEIGHT
+  Current:     ${s.last.weight} kg
+  Δ 7-day:     ${s.weightDelta !== null ? (wd > 0 ? '+' : '') + s.weightDelta + ' kg' : 'n/a'}
+  To target:   ${s.toTarget} kg (<85 kg)
+  From baseline: -${s.totalLostFromBaseline} kg
+
+WAIST
+  Current:     ${s.last.waist || 'not logged'} cm
+  Δ 7-day:     ${s.waistDelta !== null ? (parseFloat(s.waistDelta) > 0 ? '+' : '') + s.waistDelta + ' cm' : 'n/a'}
+  ${s.totalWaistFromBaseline ? 'From baseline: -' + s.totalWaistFromBaseline + ' cm' : ''}
+
+RECOVERY (RHR)
+  7-day avg:   ${s.avgRhr ? s.avgRhr + ' bpm' : 'not tracked'}
+  Δ vs prior:  ${s.rhrDelta !== null ? (s.rhrDelta > 0 ? '+' : '') + s.rhrDelta + ' bpm' : 'n/a'}
+  ${s.rhrDelta && parseInt(s.rhrDelta) > 5 ? '⚠ Elevated — consider deload' : ''}
+
+COMPLIANCE
+  Check-ins logged:  ${s.entries}/7 days
+  Max sessions wk:   ${s.maxSessions}/5 target
+  Protein 200g+:     ${s.proteinCompliance}/${s.entries} days (${proteinPct}%)
+  ${s.proteinBelow > 0 ? '⚠ Protein <160g on ' + s.proteinBelow + ' day(s) — Mounjaro compliance risk' : ''}
+
+FRICTION
+  Injury days:       ${s.injuryDays}
+  Post-duty days:    ${s.dutyDays}
+
+ASSESSMENT
+  ${assessment}
+
+${s.notes.length > 0 ? 'NOTES\n' + s.notes.join('\n') : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+
+  out.style.display = 'block';
+  out.textContent = report;
+}
+
+async function copyForClaude() {
+  const s = computeWeekStats(7);
+  if (!s) { alert('No check-ins in last 7 days'); return; }
+
+  const wd = s.weightDelta ? parseFloat(s.weightDelta) : null;
+
+  const prompt =
+`Weekly check-in — Week ${s.week}
+
+Metrics this week:
+- Weight: ${s.last.weight} kg (Δ ${s.weightDelta !== null ? (wd > 0 ? '+' : '') + s.weightDelta : 'n/a'} kg vs last week)
+- Waist: ${s.last.waist || 'not logged'} cm ${s.waistDelta !== null ? '(Δ ' + (parseFloat(s.waistDelta) > 0 ? '+' : '') + s.waistDelta + ' cm)' : ''}
+- To target: ${s.toTarget} kg remaining to <85 kg
+- Total lost from baseline (93.4kg): ${s.totalLostFromBaseline} kg
+
+Recovery & training:
+- Morning RHR 7-day avg: ${s.avgRhr ? s.avgRhr + ' bpm' : 'not tracked'}${s.rhrDelta !== null ? ' (Δ ' + (s.rhrDelta > 0 ? '+' : '') + s.rhrDelta + ' bpm vs prior week)' : ''}
+- Sessions completed: ${s.maxSessions}/5
+- Injury days: ${s.injuryDays}
+- Post-duty days: ${s.dutyDays}
+
+Nutrition:
+- Protein 200g+ hit: ${s.proteinCompliance}/${s.entries} check-ins
+${s.proteinBelow > 0 ? '- Protein <160g on ' + s.proteinBelow + ' day(s)' : ''}
+
+${s.notes.length > 0 ? 'Notes:\n' + s.notes.join('\n') : ''}
+
+Assess my trajectory. Am I on track for <85kg? Adjust calories, training, or supplements if needed. Call out anything sus.`;
+
+  try {
+    await navigator.clipboard.writeText(prompt);
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied — paste in Claude chat';
+    setTimeout(() => btn.textContent = orig, 2500);
+  } catch(e) {
+    // Fallback: show in output box for manual copy
+    const out = document.getElementById('review-output');
+    out.style.display = 'block';
+    out.textContent = '[Copy the text below and paste in Claude chat]\n\n' + prompt;
+  }
+}
+
+async function exportJSON() {
+  const data = {
+    version: 'recomp-v2',
+    exported: new Date().toISOString(),
+    baseline: BASELINE,
+    targets: TARGETS,
+    checkins,
+    foodLog,
+    photoEntries: photoEntries.map(e => ({...e, photos: e.photos.map(p => p ? '[image data omitted for size]' : null)}))
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type:'application/json'}));
+  a.download = 'AK_recomp_backup_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+async function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Sanity check the file
+      if (!data.version || !data.version.startsWith('recomp-')) {
+        alert('Not a valid recomp backup file.');
+        return;
+      }
+
+      const summary = [];
+      if (data.checkins) summary.push(`${data.checkins.length} check-ins`);
+      if (data.foodLog) summary.push(`${Object.keys(data.foodLog).length} food log days`);
+      if (data.photoEntries) summary.push(`${data.photoEntries.length} photo entries`);
+
+      const proceed = confirm(`Restore from backup exported ${data.exported?.slice(0,10)}?\n\nThis will OVERWRITE current data:\n• ${summary.join('\n• ')}\n\nContinue?`);
+      if (!proceed) return;
+
+      // Restore each section
+      if (data.checkins) checkins = data.checkins;
+      if (data.foodLog) foodLog = data.foodLog;
+      if (data.photoEntries) {
+        // Photos were stripped on export; keep current photo files, just restore metadata
+        const currentPhotos = {};
+        photoEntries.forEach(e => currentPhotos[e.id] = e.photos);
+        photoEntries = data.photoEntries.map(e => ({
+          ...e,
+          photos: currentPhotos[e.id] || [null,null,null,null]
+        }));
+      }
+
+      await save();
+      await saveFoodLog();
+
+      renderDashboard();
+      renderLog();
+      renderPhotos();
+      renderFoodLog();
+
+      alert('Restore complete. ' + summary.join(', ') + '.');
+    } catch(err) {
+      alert('Import failed: ' + err.message);
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // reset so same file can be re-selected
+}
+
+function checkStorageStatus() {
+  const el = document.getElementById('storage-status');
+  if (!el) return;
+  let hasLocal = false;
+  try {
+    localStorage.setItem('_ak_test', '1');
+    localStorage.removeItem('_ak_test');
+    hasLocal = true;
+  } catch(e) {}
+
+  if (hasLocal) {
+    el.innerHTML = '✓ localStorage active — data persists on this device/browser. <strong>Use the JSON Export below weekly to back up across devices.</strong>';
+    el.style.color = 'var(--lime)';
+  } else {
+    el.innerHTML = '✗ Browser storage blocked — data will be lost on refresh. Check browser settings (disable "block all cookies", private browsing, etc.)';
+    el.style.color = 'var(--red)';
+  }
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+(async () => {
+  document.getElementById('ci-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ph-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('fl-date').value = new Date().toISOString().slice(0,10);
+  await load();
+  await loadFoodLog();
+  renderDashboard();
+  renderLog();
+  renderPhotos();
+  renderQuickButtons();
+  renderFoodLog();
+  checkStorageStatus();
+})();
+</script>
+</body>
+</html>
