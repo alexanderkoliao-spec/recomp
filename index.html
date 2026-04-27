@@ -1119,10 +1119,8 @@ details.collapsible > div {
       <button class="btn btn-lime" onclick="generateWeeklyReview()">Generate Report Card</button>
       <button class="btn btn-ghost" onclick="copyForClaude()">Copy for Claude Chat</button>
       <button class="btn btn-ghost" onclick="exportJSON()">Backup (JSON)</button>
-      <label class="btn btn-ghost" style="display:inline-block; cursor:pointer">
-        Restore JSON
-        <input type="file" accept=".json,application/json" onchange="importJSON(event)" style="display:none">
-      </label>
+      <button class="btn btn-ghost" onclick="document.getElementById('json-restore-input').click()">Restore JSON</button>
+      <input type="file" id="json-restore-input" accept=".json,application/json" onchange="importJSON(event)" style="display:none">
     </div>
     <div id="review-output" style="display:none; background:var(--s2); border-radius:var(--r2); padding:14px; font-family:var(--mono); font-size:0.78rem; line-height:1.6; white-space:pre-wrap; color:var(--text); overflow-x:auto"></div>
   </div>
@@ -3396,11 +3394,43 @@ function computeWeekStats(daysBack = 7) {
   const priorAvgRhr = priorWithRhr.length > 0 ? (priorWithRhr.reduce((s,c) => s+c.rhr, 0) / priorWithRhr.length).toFixed(0) : null;
   const rhrDelta = (avgRhr && priorAvgRhr) ? (avgRhr - priorAvgRhr).toFixed(0) : null;
 
-  const sessionsReported = recent.map(c => parseInt(c.sessions)||0).filter(n => n>0);
-  const maxSessions = sessionsReported.length > 0 ? Math.max(...sessionsReported) : 0;
+  // ── REAL DATA: pull from food log within the date window
+  const foodDayStats = [];
+  const today = new Date();
+  for (let i = 0; i < daysBack; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dStr = d.toISOString().slice(0,10);
+    const entries = foodLog[dStr] || [];
+    if (entries.length === 0) continue;
+    const totals = entries.reduce((a,e) => ({
+      protein: a.protein + (e.protein||0),
+      kcal: a.kcal + (e.kcal||0)
+    }), {protein:0, kcal:0});
+    foodDayStats.push({
+      date: dStr,
+      protein: totals.protein,
+      kcal: totals.kcal,
+      isTrainingDay: [0,1,2,4,6].includes(d.getDay()) // Sun, Mon, Tue, Thu, Sat
+    });
+  }
+  foodDayStats.sort((a,b) => a.date.localeCompare(b.date));
 
-  const proteinCompliance = recent.filter(c => c.protein === '200g+ ✓').length;
-  const proteinBelow = recent.filter(c => c.protein === '<160g ✗').length;
+  // Protein compliance from real food log data
+  const daysWithFoodLog = foodDayStats.length;
+  const proteinCompliance = foodDayStats.filter(d => d.protein >= 200).length;
+  const proteinClose = foodDayStats.filter(d => d.protein >= 160 && d.protein < 200).length;
+  const proteinBelow = foodDayStats.filter(d => d.protein < 160 && d.protein > 0).length;
+  const avgProtein = daysWithFoodLog > 0 ? (foodDayStats.reduce((s,d) => s+d.protein, 0) / daysWithFoodLog).toFixed(0) : null;
+  const avgKcal = daysWithFoodLog > 0 ? (foodDayStats.reduce((s,d) => s+d.kcal, 0) / daysWithFoodLog).toFixed(0) : null;
+
+  // ── Sessions: use the higher of (manually-reported via check-in) OR (inferred from training-day food logs)
+  // Inferred: if you logged food on a training day with reasonable kcal (>800), assume you trained.
+  // This is imperfect but better than relying solely on the check-in form which most users skip.
+  const sessionsReported = recent.map(c => parseInt(c.sessions)||0).filter(n => n>0);
+  const maxSessionsReported = sessionsReported.length > 0 ? Math.max(...sessionsReported) : 0;
+  const inferredSessions = foodDayStats.filter(d => d.isTrainingDay && d.kcal > 800).length;
+  const maxSessions = Math.max(maxSessionsReported, inferredSessions);
 
   const injuryDays = recent.filter(c => c.injury && c.injury !== 'none').length;
   const dutyDays = recent.filter(c => c.duty === 'yes').length;
@@ -3414,7 +3444,9 @@ function computeWeekStats(daysBack = 7) {
     week, entries: recent.length, first, last,
     weightDelta, waistDelta,
     avgRhr, rhrDelta,
-    maxSessions, proteinCompliance, proteinBelow,
+    maxSessions, sessionsReported: maxSessionsReported, inferredSessions,
+    proteinCompliance, proteinClose, proteinBelow, avgProtein, avgKcal,
+    daysWithFoodLog,
     injuryDays, dutyDays,
     notes, toTarget,
     totalLostFromBaseline: (BASELINE.weight - last.weight).toFixed(1),
@@ -3465,8 +3497,13 @@ RECOVERY (RHR)
 
 COMPLIANCE
   Check-ins logged:  ${s.entries}/7 days
-  Max sessions wk:   ${s.maxSessions}/5 target
-  Protein 200g+:     ${s.proteinCompliance}/${s.entries} days (${proteinPct}%)
+  Sessions (estimated): ${s.maxSessions}/5 target ${s.inferredSessions > s.sessionsReported ? '(inferred from food log on training days)' : '(from check-in form)'}
+  Food log days:     ${s.daysWithFoodLog}/7
+  Avg daily protein: ${s.avgProtein ? s.avgProtein + 'g' : 'no food log'}
+  Avg daily kcal:    ${s.avgKcal ? s.avgKcal + ' kcal' : 'no food log'}
+  Protein ≥200g:     ${s.proteinCompliance}/${s.daysWithFoodLog} days
+  Protein 160-199g:  ${s.proteinClose}/${s.daysWithFoodLog} days
+  Protein <160g:     ${s.proteinBelow}/${s.daysWithFoodLog} days
   ${s.proteinBelow > 0 ? '⚠ Protein <160g on ' + s.proteinBelow + ' day(s) — Mounjaro compliance risk' : ''}
 
 FRICTION
@@ -3500,13 +3537,16 @@ Metrics this week:
 
 Recovery & training:
 - Morning RHR 7-day avg: ${s.avgRhr ? s.avgRhr + ' bpm' : 'not tracked'}${s.rhrDelta !== null ? ' (Δ ' + (s.rhrDelta > 0 ? '+' : '') + s.rhrDelta + ' bpm vs prior week)' : ''}
-- Sessions completed: ${s.maxSessions}/5
+- Sessions completed: ${s.maxSessions}/5 ${s.inferredSessions > s.sessionsReported ? '(inferred from training-day food logs)' : ''}
 - Injury days: ${s.injuryDays}
 - Post-duty days: ${s.dutyDays}
 
-Nutrition:
-- Protein 200g+ hit: ${s.proteinCompliance}/${s.entries} check-ins
-${s.proteinBelow > 0 ? '- Protein <160g on ' + s.proteinBelow + ' day(s)' : ''}
+Nutrition (from food log, ${s.daysWithFoodLog}/7 days logged):
+- Avg daily protein: ${s.avgProtein ? s.avgProtein + 'g' : 'no food log data'}
+- Avg daily kcal: ${s.avgKcal ? s.avgKcal + ' kcal' : 'no food log data'}
+- Days hitting ≥200g protein: ${s.proteinCompliance}/${s.daysWithFoodLog}
+- Days at 160-199g protein: ${s.proteinClose}/${s.daysWithFoodLog}
+- Days <160g protein: ${s.proteinBelow}/${s.daysWithFoodLog}
 
 ${s.notes.length > 0 ? 'Notes:\n' + s.notes.join('\n') : ''}
 
@@ -3544,16 +3584,31 @@ async function exportJSON() {
 
 async function importJSON(event) {
   const file = event.target.files[0];
-  if (!file) return;
+  if (!file) {
+    alert('No file selected.');
+    return;
+  }
+
+  // Visible feedback that handler fired
+  const out = document.getElementById('review-output');
+  if (out) {
+    out.style.display = 'block';
+    out.textContent = 'Reading ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)...';
+  }
 
   const reader = new FileReader();
+
+  reader.onerror = () => {
+    alert('Could not read file: ' + (reader.error?.message || 'unknown error'));
+  };
+
   reader.onload = async (e) => {
     try {
       const data = JSON.parse(e.target.result);
 
       // Sanity check the file
       if (!data.version || !data.version.startsWith('recomp-')) {
-        alert('Not a valid recomp backup file.');
+        alert('Not a valid recomp backup file. Got version: ' + (data.version || 'none'));
         return;
       }
 
@@ -3563,7 +3618,10 @@ async function importJSON(event) {
       if (data.photoEntries) summary.push(`${data.photoEntries.length} photo entries`);
 
       const proceed = confirm(`Restore from backup exported ${data.exported?.slice(0,10)}?\n\nThis will OVERWRITE current data:\n• ${summary.join('\n• ')}\n\nContinue?`);
-      if (!proceed) return;
+      if (!proceed) {
+        if (out) out.textContent = 'Restore cancelled.';
+        return;
+      }
 
       // Restore each section
       if (data.checkins) checkins = data.checkins;
@@ -3578,17 +3636,23 @@ async function importJSON(event) {
         }));
       }
 
-      await save();
-      await saveFoodLog();
+      const saveResult = await save();
+      const foodSaveResult = await saveFoodLog();
 
+      // Force re-render of all tabs
       renderDashboard();
       renderLog();
       renderPhotos();
       renderFoodLog();
 
-      alert('Restore complete. ' + summary.join(', ') + '.');
+      const msg = `✓ Restore complete.\n${summary.join('\n')}\n\nSave to disk: ${saveResult ? 'OK' : 'FAILED'}\nFood log save: ${foodSaveResult ? 'OK' : 'FAILED'}`;
+      if (out) {
+        out.textContent = msg;
+      }
+      alert(msg);
     } catch(err) {
       alert('Import failed: ' + err.message);
+      if (out) out.textContent = 'Error: ' + err.message;
       console.error(err);
     }
   };
