@@ -681,6 +681,29 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   color: var(--text3);
   margin-top: 2px;
 }
+.quick-btn-warn {
+  border-color: var(--amber);
+  background: rgba(255, 176, 32, 0.04);
+}
+.quick-btn-warn:hover {
+  border-color: var(--amber);
+  background: rgba(255, 176, 32, 0.08);
+}
+.quick-btn-warn .quick-btn-kcal { color: var(--amber); }
+.quick-btn-tag {
+  display: inline-block;
+  font-size: 0.55rem;
+  padding: 2px 6px;
+  background: var(--amber);
+  color: var(--bg);
+  border-radius: 4px;
+  margin-left: 4px;
+  vertical-align: middle;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
 
 .food-entry-row {
   display: flex;
@@ -1487,7 +1510,7 @@ details.collapsible > div {
     <div class="day-header" onclick="toggleDay(this)">
       <div>
         <div class="day-title">Saturday — Lower B <span class="tag tag-purple">Quad (PF-Safe)</span></div>
-        <div class="day-sub">40-50 min · Spanish squat primary · leg ext removed</div>
+        <div class="day-sub">40-50 min · single-leg primary · L knee depth-limited</div>
       </div>
       <div class="day-toggle">▼</div>
     </div>
@@ -1496,19 +1519,19 @@ details.collapsible > div {
       <div class="ex-row">
         <div class="ex-num">A1</div>
         <div>
-          <div class="ex-name">Reverse Lunge (DB, goblet, or Smith) <span class="injury-flag flag-new">REPLACES BSS</span></div>
-          <div class="ex-sets">4 × 8-10 each · 2 min rest</div>
-          <div class="note">Reverse lunge &gt; BSS for valgus-prone knees. Step backward reduces anterior shear on the front knee and the stance leg loads the glutes more than quads. Keep torso upright, front tibia vertical.</div>
-          <div class="alt">Alt: low box step-up, split squat (static, front foot elevated)</div>
+          <div class="ex-name">Single-Leg Leg Press (feet high + wide) <span class="injury-flag flag-knee">ASYMMETRY FIX · ROM LIMIT</span></div>
+          <div class="ex-sets">3 × 8-10 each leg · L first · 90s between legs · 2 min between sets</div>
+          <div class="note">Forces symmetric loading — bilateral hides L>R asymmetry from post-meniscectomy quad inhibition. L leg first (weaker), R leg matches L's rep count even if R could do more. Foot placement HIGH on platform shifts load posterior, reduces PFJ stress. ROM stop set so L knee never passes 70° flexion. Light-to-moderate load (60-70% of bilateral per side).</div>
+          <div class="alt">Alt: modified reverse lunge (shorter step, forward lean) if leg press unavailable</div>
         </div>
       </div>
       <div class="ex-row">
         <div class="ex-num">A2</div>
         <div>
-          <div class="ex-name">Leg Press (feet high + wide) <span class="injury-flag flag-knee">ROM LIMIT</span></div>
-          <div class="ex-sets">4 × 10-12 · 90s rest</div>
-          <div class="note">Stop 20° before full flexion. Feet high offloads patellofemoral joint.</div>
-          <div class="alt">Alt: hack squat same ROM</div>
+          <div class="ex-name">Heel-Elevated Goblet Squat to Box <span class="injury-flag flag-knee">DEPTH LIMIT</span></div>
+          <div class="ex-sets">3 × 10-12 · 90s rest</div>
+          <div class="note">Bilateral quad work with depth control. Box height set so neither knee passes 70° flexion. Heels on plate (or slant board) shifts load to quads with vertical shin angle — protects PFJ and avoids deep flexion that aggravates L knee effusion. Slow eccentric.</div>
+          <div class="alt">Alt: hack squat with depth limit</div>
         </div>
       </div>
       <div class="ex-section-label">Accessory</div>
@@ -1517,8 +1540,8 @@ details.collapsible > div {
         <div>
           <div class="ex-name">Spanish Squat (band-resisted) <span class="injury-flag flag-new">REPLACES LEG EXT</span></div>
           <div class="ex-sets">3 × 12-15 · 60s rest</div>
-          <div class="note">Band counter-force at the knees lowers PFJ reaction force per unit of quad activation. Best quad-biased movement for PF OA (Giles et al., BJSM 2017). VMO-biased.</div>
-          <div class="alt">Alt: sissy squat (controlled), reverse Nordic</div>
+          <div class="note">Band counter-force at the knees lowers PFJ reaction force per unit of quad activation. Best quad-biased movement for PF OA (Giles et al., BJSM 2017). VMO-biased. Skip if no band — do NOT substitute with sissy squat or reverse Nordic (both load deep flexion, opposite of what we need).</div>
+          <div class="alt">Alt: wall sit (vertical-shin variant) 3 × 30-45s if no band</div>
         </div>
       </div>
       <div class="ex-row">
@@ -1715,12 +1738,12 @@ details.collapsible > div {
   <div class="stat-strip" style="grid-template-columns: repeat(3,1fr)">
     <div class="stat-card" style="--accent-color:var(--lime)">
       <div class="stat-label">Training Day</div>
-      <div class="stat-val" style="font-size:1.1rem">1800</div>
+      <div class="stat-val" style="font-size:1.1rem">1700</div>
       <div class="stat-sub">kcal · Mon/Tue/Thu/Sat/Sun</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--amber)">
       <div class="stat-label">Rest Day</div>
-      <div class="stat-val" style="font-size:1.1rem">1600</div>
+      <div class="stat-val" style="font-size:1.1rem">1500</div>
       <div class="stat-sub">kcal · Wed/Fri (incl. surgery)</div>
     </div>
     <div class="stat-card" style="--accent-color:var(--cyan)">
@@ -1734,10 +1757,10 @@ details.collapsible > div {
     <summary>Deficit Math & Abort Criteria</summary>
     <div>
       <div style="font-size:0.85rem; line-height:1.6">
-        Weekly intake: (1800 × 5) + (1600 × 2) = <strong>12,200 kcal</strong> → daily avg <strong>~1743 kcal</strong><br>
-        Estimated maintenance at 94kg + 4-5 training sessions: ~2700 kcal<br>
-        <strong>Net deficit: ~957 kcal/day → ~1.0 kg/week fat loss</strong><br>
-        <strong>ETA to &lt;85kg: week 9-10</strong> (plan extends to 12 for buffer + stall insurance)<br>
+        Weekly intake: (1700 × 5) + (1500 × 2) = <strong>11,500 kcal</strong> → daily avg <strong>~1643 kcal</strong><br>
+        Estimated maintenance at 93kg + 5 training sessions: ~2700 kcal<br>
+        <strong>Net deficit: ~1057 kcal/day → ~1.0-1.1 kg/week fat loss</strong><br>
+        <strong>ETA to &lt;85kg: week 9-10</strong> (Week 2 prescription, adjusted from Week 1 data showing under-eating)<br>
         <span class="note" style="color:var(--red)">Abort criteria: if weight loss stalls 2+ weeks OR training performance crashes &gt;15% → reverse diet 1 week at +300 kcal, then resume.</span>
       </div>
     </div>
@@ -1768,7 +1791,7 @@ details.collapsible > div {
   </details>
 
   <details class="collapsible">
-    <summary>Training Day Template — ~1800 kcal</summary>
+    <summary>Training Day Template — ~1700 kcal</summary>
     <div>
     <div class="meal-row">
       <div class="meal-time">12:00</div>
@@ -1807,7 +1830,7 @@ details.collapsible > div {
   </details>
 
   <details class="collapsible">
-    <summary>Rest Day Template — ~1600 kcal (Wed/Fri)</summary>
+    <summary>Rest Day Template — ~1500 kcal (Wed/Fri)</summary>
     <div>
     <div class="meal-row">
       <div class="meal-time">12:00</div>
@@ -1905,7 +1928,7 @@ details.collapsible > div {
     <div class="macro-small" style="--accent-color: var(--amber)">
       <div class="macro-label">Calories</div>
       <div class="macro-small-val"><span id="fl-kcal">0</span></div>
-      <div class="macro-target" style="font-size:0.68rem">/ <span id="fl-kcal-target">1800</span></div>
+      <div class="macro-target" style="font-size:0.68rem">/ <span id="fl-kcal-target">1700</span></div>
       <div class="macro-bar-container"><div class="macro-bar-fill" id="fl-kcal-bar" style="width:0%; background:var(--amber)"></div></div>
     </div>
     <div class="macro-small" style="--accent-color: var(--cyan)">
@@ -2567,7 +2590,7 @@ function renderTodayChecklist() {
   const dow = today.getDay();
   const isTraining = [0,1,2,4,6].includes(dow);
   const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow];
-  const dayType = isTraining ? 'training day (1800 kcal · 200g P)' : 'rest day (1600 kcal · 200g P)';
+  const dayType = isTraining ? 'training day (1700 kcal · 200g P)' : 'rest day (1500 kcal · 200g P)';
   const dayMap = {
     0: 'Metabolic Circuit',
     1: 'Upper B (Push+Cuff)',
@@ -2684,7 +2707,7 @@ function renderTodayPlan() {
   const plan = document.getElementById('today-plan');
 
   const dayName = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][dow];
-  const cals = isTraining ? '1800 kcal (training day)' : '1600 kcal (rest day)';
+  const cals = isTraining ? '1700 kcal (training day)' : '1500 kcal (rest day)';
 
   const trainingMeals = `
     <div class="meal-row"><div class="meal-time">12:00</div><div><div class="meal-food">½ Anchor Chicken + Rice ÷8</div><div class="meal-macros">53g pro · 50g carbs · 460 kcal</div></div></div>
@@ -3015,15 +3038,17 @@ const ANCHOR_FOODS = [
   { name: 'Whey scoop', protein: 30, carbs: 2, fat: 1, kcal: 140 },
   { name: '½ Anchor Chicken', protein: 48, carbs: 0, fat: 5, kcal: 235 },
   { name: 'Full Anchor Chicken', protein: 96, carbs: 0, fat: 10, kcal: 465 },
+  { name: 'Dachan Chicken', protein: 22, carbs: 2, fat: 2, kcal: 112 },
   { name: 'Rice portion (÷8)', protein: 5, carbs: 50, fat: 0, kcal: 225 },
   { name: 'Rice portion (÷6)', protein: 7, carbs: 66, fat: 0, kcal: 300 },
+  { name: 'Sweet Potato (150g)', protein: 2, carbs: 30, fat: 0, kcal: 130 },
   { name: '30g Chicken Chips', protein: 28, carbs: 0, fat: 3, kcal: 138 },
   { name: '50g Chicken Chips', protein: 46, carbs: 0, fat: 5, kcal: 230 },
   { name: '300g Greek Yogurt', protein: 28, carbs: 16, fat: 0, kcal: 177 },
   { name: '200g Greek Yogurt', protein: 19, carbs: 11, fat: 0, kcal: 118 },
   { name: '7-11 Chicken Breast', protein: 30, carbs: 0, fat: 2, kcal: 150 },
   { name: 'Vegetables (mixed)', protein: 3, carbs: 10, fat: 0, kcal: 55 },
-  { name: 'Collagen UP (3 scoops)', protein: 13, carbs: 0, fat: 0, kcal: 55 }
+  { name: 'Collagen UP (3 scoops)', protein: 13, carbs: 0, fat: 0, kcal: 55, nonCounting: true }
 ];
 
 // Restaurant/meeting shortcuts — rough estimates
@@ -3087,7 +3112,7 @@ function isTrainingDay(dateStr) {
 }
 
 function getDailyTarget(dateStr) {
-  return isTrainingDay(dateStr) ? { kcal: 1800, protein: 200 } : { kcal: 1600, protein: 200 };
+  return isTrainingDay(dateStr) ? { kcal: 1700, protein: 200 } : { kcal: 1500, protein: 200 };
 }
 
 function renderQuickButtons() {
@@ -3096,10 +3121,10 @@ function renderQuickButtons() {
   if (!anchorGrid || !shortcutGrid) return;
 
   anchorGrid.innerHTML = ANCHOR_FOODS.map((f, i) => `
-    <button class="quick-btn" onclick="addAnchorFood(${i})">
-      <div class="quick-btn-name">${f.name}</div>
+    <button class="quick-btn ${f.nonCounting ? 'quick-btn-warn' : ''}" onclick="addAnchorFood(${i})">
+      <div class="quick-btn-name">${f.name}${f.nonCounting ? ' <span class="quick-btn-tag">connective tissue</span>' : ''}</div>
       <div class="quick-btn-macros">P${f.protein}g · C${f.carbs}g · F${f.fat}g</div>
-      <div class="quick-btn-kcal">${f.kcal} kcal</div>
+      <div class="quick-btn-kcal">${f.kcal} kcal${f.nonCounting ? ' · doesn\'t count toward 200g' : ''}</div>
     </button>
   `).join('');
 
@@ -3114,7 +3139,7 @@ function renderQuickButtons() {
 
 async function addAnchorFood(idx) {
   const f = ANCHOR_FOODS[idx];
-  await addFoodEntry({ ...f, source: 'anchor' });
+  await addFoodEntry({ ...f, source: 'anchor', nonCountingProtein: f.nonCounting || false });
 }
 
 async function addShortcutFood(idx) {
@@ -3167,9 +3192,9 @@ function renderFoodLog() {
   const entries = foodLog[date] || [];
   const target = getDailyTarget(date);
 
-  // Totals
+  // Totals — protein excludes non-counting (collagen) but kcal/carbs/fat include all entries
   const totals = entries.reduce((acc, e) => ({
-    protein: acc.protein + (e.protein || 0),
+    protein: acc.protein + (e.nonCountingProtein ? 0 : (e.protein || 0)),
     carbs: acc.carbs + (e.carbs || 0),
     fat: acc.fat + (e.fat || 0),
     kcal: acc.kcal + (e.kcal || 0)
@@ -3189,7 +3214,7 @@ function renderFoodLog() {
   document.getElementById('fl-kcal-bar').style.width = kcalPct + '%';
 
   // Day type indicator
-  const dayType = isTrainingDay(date) ? 'Training day · 1800 kcal / 200g protein' : 'Rest day · 1600 kcal / 200g protein';
+  const dayType = isTrainingDay(date) ? 'Training day · 1700 kcal / 200g protein' : 'Rest day · 1500 kcal / 200g protein';
   document.getElementById('fl-day-type').textContent = dayType;
 
   // Protein alert logic
@@ -3249,7 +3274,7 @@ function renderWeeklyFoodSummary() {
     d.setDate(d.getDate() - i);
     const dateStr = d.toISOString().slice(0,10);
     const entries = foodLog[dateStr] || [];
-    const protein = entries.reduce((s,e) => s + (e.protein||0), 0);
+    const protein = entries.reduce((s,e) => s + (e.nonCountingProtein ? 0 : (e.protein||0)), 0);
     const kcal = entries.reduce((s,e) => s + (e.kcal||0), 0);
     const target = getDailyTarget(dateStr);
     const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
@@ -3287,16 +3312,18 @@ async function copyFoodDayForClaude() {
   const entries = foodLog[date] || [];
   const target = getDailyTarget(date);
   const totals = entries.reduce((a,e) => ({
-    protein: a.protein + (e.protein||0),
+    protein: a.protein + (e.nonCountingProtein ? 0 : (e.protein||0)),
+    proteinNonCounting: a.proteinNonCounting + (e.nonCountingProtein ? (e.protein||0) : 0),
     carbs: a.carbs + (e.carbs||0),
     fat: a.fat + (e.fat||0),
     kcal: a.kcal + (e.kcal||0)
-  }), {protein:0,carbs:0,fat:0,kcal:0});
+  }), {protein:0, proteinNonCounting:0, carbs:0, fat:0, kcal:0});
 
   const lines = [...entries].sort((a,b) => a.time.localeCompare(b.time))
-    .map(e => `  ${e.time} · ${e.name} · P${Math.round(e.protein)}g C${Math.round(e.carbs)}g F${Math.round(e.fat)}g · ${Math.round(e.kcal)} kcal`);
+    .map(e => `  ${e.time} · ${e.name}${e.nonCountingProtein ? ' [non-counting]' : ''} · P${Math.round(e.protein)}g C${Math.round(e.carbs)}g F${Math.round(e.fat)}g · ${Math.round(e.kcal)} kcal`);
 
-  const promptText = `Food log ${date} (${isTrainingDay(date) ? 'training' : 'rest'} day):\n\n${lines.join('\n') || '  (no entries)'}\n\nTotals: ${Math.round(totals.protein)}g P · ${Math.round(totals.carbs)}g C · ${Math.round(totals.fat)}g F · ${Math.round(totals.kcal)} kcal\nTargets: ${target.protein}g P floor / ${target.kcal} kcal\n\nAssess: protein compliance, calorie accuracy, food choice quality. Flag anything suspicious.`;
+  const nonCountingNote = totals.proteinNonCounting > 0 ? `\n(Plus ${Math.round(totals.proteinNonCounting)}g non-counting protein from collagen, excluded from total above)` : '';
+  const promptText = `Food log ${date} (${isTrainingDay(date) ? 'training' : 'rest'} day):\n\n${lines.join('\n') || '  (no entries)'}\n\nTotals: ${Math.round(totals.protein)}g P · ${Math.round(totals.carbs)}g C · ${Math.round(totals.fat)}g F · ${Math.round(totals.kcal)} kcal${nonCountingNote}\nTargets: ${target.protein}g P floor / ${target.kcal} kcal\n\nAssess: protein compliance, calorie accuracy, food choice quality. Flag anything suspicious.`;
 
   try {
     await navigator.clipboard.writeText(promptText);
@@ -3404,7 +3431,7 @@ function computeWeekStats(daysBack = 7) {
     const entries = foodLog[dStr] || [];
     if (entries.length === 0) continue;
     const totals = entries.reduce((a,e) => ({
-      protein: a.protein + (e.protein||0),
+      protein: a.protein + (e.nonCountingProtein ? 0 : (e.protein||0)),
       kcal: a.kcal + (e.kcal||0)
     }), {protein:0, kcal:0});
     foodDayStats.push({
