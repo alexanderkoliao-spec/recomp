@@ -1194,6 +1194,10 @@ details.collapsible > div {
         <input type="number" id="ci-rhr" step="1" min="35" max="100" placeholder="58">
       </div>
       <div class="form-group">
+        <label>Avg sleep (hours)</label>
+        <input type="number" id="ci-sleep" step="0.5" min="3" max="12" placeholder="7">
+      </div>
+      <div class="form-group">
         <label>Sessions this week</label>
         <select id="ci-sessions">
           <option value="">—</option>
@@ -1367,6 +1371,14 @@ details.collapsible > div {
           <div class="ex-sets">3 × 10 each side · 45s rest</div>
         </div>
       </div>
+      <div class="ex-row">
+        <div class="ex-num">C3</div>
+        <div>
+          <div class="ex-name">Cable Crunch <span class="injury-flag flag-new">DIRECT ABS</span></div>
+          <div class="ex-sets">3 × 12-15 · 60s rest</div>
+          <div class="note">Rectus abdominis hypertrophy — the visible 6-pack lift. Kneel facing cable, rope at forehead, flex spine under load. Hips stay fixed; movement is spinal flexion only, not hip flexion. Pair with Thursday Hanging Knee Raise for upper + lower rectus coverage.</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1502,6 +1514,14 @@ details.collapsible > div {
           <div class="ex-sets">3 × 12 each · 45s rest</div>
         </div>
       </div>
+      <div class="ex-row">
+        <div class="ex-num">C2</div>
+        <div>
+          <div class="ex-name">Hanging Knee Raise <span class="injury-flag flag-new">DIRECT ABS</span></div>
+          <div class="ex-sets">3 × 10-15 · 60s rest</div>
+          <div class="note">Lower rectus + hip flexor strength. Hang from pull-up bar (use straps if grip fails before abs), raise knees to chest, control descent. Don't swing. If grip is the limiter, substitute lying leg raise on bench. Paired with Monday Cable Crunch for upper + lower rectus coverage.</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1608,9 +1628,9 @@ details.collapsible > div {
       <div class="ex-row">
         <div class="ex-num">A3</div>
         <div>
-          <div class="ex-name">Pallof Press</div>
-          <div class="ex-sets">10 each side · 2-3s hold</div>
-          <div class="note">Anti-rotation core work. Zero overlap with any other day. Cable or band at chest height, press straight out, resist rotation.</div>
+          <div class="ex-name">Dead Bug</div>
+          <div class="ex-sets">10 each side · 2-3s hold each rep</div>
+          <div class="note">Anti-extension core stability. Lie supine, opposite arm + leg extend slowly, lumbar spine STAYS flat against floor (don't let lower back arch). Zero overlap with Monday's Pallof Press (anti-rotation) — different vector. Bodyweight, no equipment needed.</div>
         </div>
       </div>
       <div class="ex-section-label">Circuit B — Lower / Carry (3 rounds, same rest)</div>
@@ -2018,7 +2038,7 @@ details.collapsible > div {
     <div class="meal-row">
       <div class="meal-time">MORNING<br>w/ breakfast</div>
       <div>
-        <div class="meal-food">LE Two-Per-Day × 2 · Nordic Naturals D3 (dose per labs) · LE Super K × 1 · Ultimate Omega 2X × 2</div>
+        <div class="meal-food">LE Two-Per-Day × 2 · NOW Foods D3 5000 IU (dose per labs) · LE Super K × 1 · Ultimate Omega 2X × 2</div>
       </div>
     </div>
     <div class="meal-row">
@@ -2066,7 +2086,7 @@ details.collapsible > div {
         &lt;30 ng/mL → 5000 IU × 8 wk, recheck<br>
         30-40 → 2000-3000 IU daily<br>
         40-60 → maintain with current 1000 IU<br>
-        <strong>iHerb pick:</strong> <strong>Nordic Naturals Vitamin D3 5000 IU</strong> (same brand you trust) or simply take 2× your current Nature Made D3 1000 IU daily. <strong>Pair with K2-MK7</strong> (see Additions below) — any time D3 is elevated above 2000 IU, K2 co-supplementation is the standard of care to prevent calcium misdirection.
+        <strong>iHerb pick:</strong> <strong>NOW Foods Vitamin D-3 High Potency 5000 IU, 240 Softgels</strong> — Nordic Naturals D3 is blocked from iHerb Taiwan shipping; NOW Foods 5000 IU clears customs reliably. 240 softgels = 8 months at 1/day. <strong>Pair with K2-MK7</strong> (see Additions below) — any time D3 is elevated above 2000 IU, K2 co-supplementation is the standard of care to prevent calcium misdirection. <span class="note" style="color:var(--amber)">Taiwan regulation classifies &gt;800 IU as drug; iHerb routinely ships NOW 5000 IU but customs may seize on inspection (low probability). Alternative: write yourself a TMU prescription for domestic high-dose D3 — no customs risk.</span>
       </div>
     </div>
 
@@ -2186,7 +2206,7 @@ details.collapsible > div {
           </tr>
           <tr>
             <td>2</td>
-            <td><strong>Nordic Naturals Vitamin D3 5000 IU</strong><br><span class="note">Cut to 1/day after lab result adjustment</span></td>
+            <td><strong>NOW Foods Vitamin D-3 High Potency 5000 IU, 240 softgels</strong><br><span class="note">Cut to 1/day after lab result adjustment. Nordic Naturals blocked from iHerb TW shipping; NOW Foods clears.</span></td>
             <td>120 softgels</td>
             <td>1</td>
             <td>1 softgel (dose per labs)</td>
@@ -2322,12 +2342,14 @@ details.collapsible > div {
     <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>Protein floor: 200g/day.</strong> Even on meeting meal days. Even on chaos days. Non-negotiable — especially on Mounjaro.</div></div>
     <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>No supinated curls under load</strong> until R biceps tendon imaging clears.</div></div>
     <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>L knee effusion = upper + hinge only</strong> that session. Rare now, but the rule stands when it appears.</div></div>
-    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">🔒</div><div><strong>Sunday check-in is mandatory.</strong> Weight + waist + RHR + sessions + injury status.</div></div>
+    <div class="rule-row"><div class="rule-icon">🔒</div><div><strong>Weigh in morning, fasted, after toilet, before any food/drink.</strong> Same time daily. Night weigh-ins are noise; post-meal weigh-ins are useless. If a social meal disrupted the prior 24-48h (high sodium/restaurant food), expect a 0.5-1.5 kg false gain — wait 3 days before drawing conclusions.</div></div>
+    <div class="rule-row" style="border-bottom:none"><div class="rule-icon">🔒</div><div><strong>Sunday check-in is mandatory.</strong> Weight + waist + RHR + sleep + sessions + injury status.</div></div>
   </div>
 
   <div class="sec-head"><h2>Accountability</h2></div>
   <div class="card">
     <div class="rule-row"><div class="rule-icon">📅</div><div>Daily weigh-in logged. 10 seconds. No excuse.</div></div>
+    <div class="rule-row"><div class="rule-icon">😴</div><div><strong>Sleep target: 7+ hours, 5/7 nights.</strong> Sleep debt elevates RHR, cortisol, and water retention — produces fake weight gain and tanks recovery. Surgical schedule will fight this; protect what you can.</div></div>
     <div class="rule-row"><div class="rule-icon">🚫</div><div><strong>No week-long fasts</strong> as self-punishment. The plan works if executed. Fasting around it = ego-protection dressed as discipline.</div></div>
     <div class="rule-row"><div class="rule-icon">🎯</div><div>Meeting meals don't justify skipping the deficit the rest of the week. One meal is noise. A pattern is a problem.</div></div>
     <div class="rule-row"><div class="rule-icon">📊</div><div><strong>Abort criteria:</strong> weight stall 2+ weeks OR training perf crash &gt;15% → reverse diet 1 week at +300 kcal. Not a failure — a tool.</div></div>
@@ -2543,6 +2565,7 @@ const DAILY_CHECKLIST = {
   logging: [
     { id: 'lg_weight', label: 'Morning weigh-in', sub: 'fasted' },
     { id: 'lg_rhr', label: 'RHR logged', sub: '' },
+    { id: 'lg_sleep', label: 'Sleep ≥7h last night', sub: 'priority' },
     { id: 'lg_protein_check', label: 'Protein ≥ 200g', sub: 'Mounjaro risk' }
   ]
 };
@@ -2810,6 +2833,7 @@ async function addCheckin() {
   const weight = document.getElementById('ci-weight').value;
   const waist = document.getElementById('ci-waist').value;
   const rhr = document.getElementById('ci-rhr').value;
+  const sleep = document.getElementById('ci-sleep').value;
   const sessions = document.getElementById('ci-sessions').value;
   const protein = document.getElementById('ci-protein').value;
   const injury = document.getElementById('ci-injury').value;
@@ -2823,13 +2847,14 @@ async function addCheckin() {
     weight: parseFloat(weight),
     waist: waist ? parseFloat(waist) : null,
     rhr: rhr ? parseInt(rhr) : null,
+    sleep: sleep ? parseFloat(sleep) : null,
     sessions, protein, injury, duty, notes
   });
   await save();
   renderLog();
   renderGuidance();
 
-  ['ci-weight','ci-waist','ci-rhr','ci-notes'].forEach(id => document.getElementById(id).value = '');
+  ['ci-weight','ci-waist','ci-rhr','ci-sleep','ci-notes'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('ci-sessions').value = '';
   document.getElementById('ci-protein').value = '';
   document.getElementById('ci-injury').value = 'none';
@@ -3042,11 +3067,15 @@ const ANCHOR_FOODS = [
   { name: 'Rice portion (÷8)', protein: 5, carbs: 50, fat: 0, kcal: 225 },
   { name: 'Rice portion (÷6)', protein: 7, carbs: 66, fat: 0, kcal: 300 },
   { name: 'Sweet Potato (150g)', protein: 2, carbs: 30, fat: 0, kcal: 130 },
+  { name: 'Cauliflower Rice (150g)', protein: 3, carbs: 7, fat: 0, kcal: 38 },
   { name: '30g Chicken Chips', protein: 28, carbs: 0, fat: 3, kcal: 138 },
   { name: '50g Chicken Chips', protein: 46, carbs: 0, fat: 5, kcal: 230 },
   { name: '300g Greek Yogurt', protein: 28, carbs: 16, fat: 0, kcal: 177 },
   { name: '200g Greek Yogurt', protein: 19, carbs: 11, fat: 0, kcal: 118 },
   { name: '7-11 Chicken Breast', protein: 30, carbs: 0, fat: 2, kcal: 150 },
+  { name: 'Hard boiled egg', protein: 6, carbs: 0, fat: 5, kcal: 70 },
+  { name: 'Avocado (½ medium)', protein: 2, carbs: 9, fat: 15, kcal: 160 },
+  { name: 'Olive Oil (1 tbsp)', protein: 0, carbs: 0, fat: 14, kcal: 120 },
   { name: 'Vegetables (mixed)', protein: 3, carbs: 10, fat: 0, kcal: 55 },
   { name: 'Collagen UP (3 scoops)', protein: 13, carbs: 0, fat: 0, kcal: 55, nonCounting: true }
 ];
@@ -3404,12 +3433,32 @@ function computeWeekStats(daysBack = 7) {
   const last = recent[recent.length - 1];
 
   // Compare to one-week-prior entries for delta
-  const priorCutoff = new Date(cutoff);
-  priorCutoff.setDate(priorCutoff.getDate() - daysBack);
-  const prior = [...checkins]
-    .filter(c => c.date >= priorCutoff.toISOString().slice(0,10) && c.date < cutoffStr)
-    .sort((a,b) => b.date.localeCompare(a.date));
-  const priorLast = prior.length > 0 ? prior[0] : null;
+  // Use the entry closest to exactly 7 days before "last" for accuracy
+  const lastDate = new Date(last.date);
+  const targetPriorDate = new Date(lastDate);
+  targetPriorDate.setDate(targetPriorDate.getDate() - 7);
+  const targetPriorStr = targetPriorDate.toISOString().slice(0,10);
+
+  // Find the entry closest to (but on or before) the target prior date
+  const allCheckins = [...checkins].sort((a,b) => a.date.localeCompare(b.date));
+  let priorLast = null;
+  let smallestDiff = Infinity;
+  for (const c of allCheckins) {
+    if (c.date >= last.date) break; // can't compare to current or future
+    const diff = Math.abs(new Date(c.date) - targetPriorDate);
+    if (diff < smallestDiff) {
+      smallestDiff = diff;
+      priorLast = c;
+    }
+  }
+
+  // Also collect prior week's RHR entries for trend (within 7 days before targetPriorDate)
+  const priorWindowStart = new Date(targetPriorDate);
+  priorWindowStart.setDate(priorWindowStart.getDate() - 6);
+  const prior = allCheckins.filter(c =>
+    c.date >= priorWindowStart.toISOString().slice(0,10) &&
+    c.date <= targetPriorStr
+  );
 
   const weightDelta = priorLast ? (last.weight - priorLast.weight).toFixed(1) : null;
   const waistDelta = (priorLast && priorLast.waist && last.waist) ? (last.waist - priorLast.waist).toFixed(1) : null;
@@ -3420,6 +3469,10 @@ function computeWeekStats(daysBack = 7) {
   const priorWithRhr = prior.filter(c => c.rhr);
   const priorAvgRhr = priorWithRhr.length > 0 ? (priorWithRhr.reduce((s,c) => s+c.rhr, 0) / priorWithRhr.length).toFixed(0) : null;
   const rhrDelta = (avgRhr && priorAvgRhr) ? (avgRhr - priorAvgRhr).toFixed(0) : null;
+
+  const withSleep = recent.filter(c => c.sleep);
+  const avgSleep = withSleep.length > 0 ? (withSleep.reduce((s,c) => s+c.sleep, 0) / withSleep.length).toFixed(1) : null;
+  const lowSleepNights = withSleep.filter(c => c.sleep < 6.5).length;
 
   // ── REAL DATA: pull from food log within the date window
   const foodDayStats = [];
@@ -3471,12 +3524,14 @@ function computeWeekStats(daysBack = 7) {
     week, entries: recent.length, first, last,
     weightDelta, waistDelta,
     avgRhr, rhrDelta,
+    avgSleep, lowSleepNights,
     maxSessions, sessionsReported: maxSessionsReported, inferredSessions,
     proteinCompliance, proteinClose, proteinBelow, avgProtein, avgKcal,
     daysWithFoodLog,
     injuryDays, dutyDays,
     notes, toTarget,
     totalLostFromBaseline: (BASELINE.weight - last.weight).toFixed(1),
+    deltaFromBaseline: (last.weight - BASELINE.weight).toFixed(1),
     totalWaistFromBaseline: (last.waist && BASELINE.waist) ? (BASELINE.waist - last.waist).toFixed(1) : null
   };
 }
@@ -3510,7 +3565,7 @@ WEIGHT
   Current:     ${s.last.weight} kg
   Δ 7-day:     ${s.weightDelta !== null ? (wd > 0 ? '+' : '') + s.weightDelta + ' kg' : 'n/a'}
   To target:   ${s.toTarget} kg (<85 kg)
-  From baseline: -${s.totalLostFromBaseline} kg
+  From baseline: ${parseFloat(s.deltaFromBaseline) > 0 ? '+' : ''}${s.deltaFromBaseline} kg ${parseFloat(s.deltaFromBaseline) <= 0 ? '(below baseline)' : '(ABOVE baseline)'}
 
 WAIST
   Current:     ${s.last.waist || 'not logged'} cm
@@ -3520,7 +3575,12 @@ WAIST
 RECOVERY (RHR)
   7-day avg:   ${s.avgRhr ? s.avgRhr + ' bpm' : 'not tracked'}
   Δ vs prior:  ${s.rhrDelta !== null ? (s.rhrDelta > 0 ? '+' : '') + s.rhrDelta + ' bpm' : 'n/a'}
-  ${s.rhrDelta && parseInt(s.rhrDelta) > 5 ? '⚠ Elevated — consider deload' : ''}
+  ${s.rhrDelta && parseInt(s.rhrDelta) > 5 ? '⚠ Elevated — likely sleep debt or under-recovery' : ''}
+
+SLEEP
+  Avg hours:   ${s.avgSleep ? s.avgSleep + 'h' : 'not tracked'}
+  Nights <6.5h: ${s.avgSleep ? s.lowSleepNights + '/' + (s.entries) : 'n/a'}
+  ${s.avgSleep && parseFloat(s.avgSleep) < 6.5 ? '⚠ Sleep is the limiting recovery factor — protect this' : ''}
 
 COMPLIANCE
   Check-ins logged:  ${s.entries}/7 days
@@ -3560,10 +3620,11 @@ Metrics this week:
 - Weight: ${s.last.weight} kg (Δ ${s.weightDelta !== null ? (wd > 0 ? '+' : '') + s.weightDelta : 'n/a'} kg vs last week)
 - Waist: ${s.last.waist || 'not logged'} cm ${s.waistDelta !== null ? '(Δ ' + (parseFloat(s.waistDelta) > 0 ? '+' : '') + s.waistDelta + ' cm)' : ''}
 - To target: ${s.toTarget} kg remaining to <85 kg
-- Total lost from baseline (93.4kg): ${s.totalLostFromBaseline} kg
+- Net from baseline (93.4kg): ${parseFloat(s.deltaFromBaseline) > 0 ? '+' : ''}${s.deltaFromBaseline} kg
 
 Recovery & training:
 - Morning RHR 7-day avg: ${s.avgRhr ? s.avgRhr + ' bpm' : 'not tracked'}${s.rhrDelta !== null ? ' (Δ ' + (s.rhrDelta > 0 ? '+' : '') + s.rhrDelta + ' bpm vs prior week)' : ''}
+- Sleep avg: ${s.avgSleep ? s.avgSleep + 'h/night' : 'not tracked'}${s.avgSleep ? ' (' + s.lowSleepNights + ' nights <6.5h)' : ''}
 - Sessions completed: ${s.maxSessions}/5 ${s.inferredSessions > s.sessionsReported ? '(inferred from training-day food logs)' : ''}
 - Injury days: ${s.injuryDays}
 - Post-duty days: ${s.dutyDays}
